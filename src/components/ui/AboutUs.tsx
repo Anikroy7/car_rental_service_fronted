@@ -1,4 +1,3 @@
-import "../../assets/css/AboutPage.css";
 import ContactInfo from "./ContactInfo";
 import Mission from "./Mission";
 import OurTeam from "./OurTeam";

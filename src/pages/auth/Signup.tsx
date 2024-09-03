@@ -1,10 +1,11 @@
 import MainLayout from "../../components/layouts/MainLayout";
 import "../../assets/css/Signup.css";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useCreateUserMutation } from "../../redux/api/authApi";
-import { useAppDispatch } from "../../redux/hook";
+import toast from "react-hot-toast";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 type FormInputs = {
   name: string;
@@ -17,8 +18,10 @@ type FormInputs = {
 
 export default function Signup() {
   const [clicked, setClicked] = useState(false);
-  const dispatch = useAppDispatch();
-  const [createUser, { data, isLoading }] = useCreateUserMutation();
+  const [showPassword, setShowPassword] = useState(true)
+  const [showConfirmPassword, setshowConfirmPassword] = useState(true)
+  const navigate = useNavigate()
+  const [createUser, {  isLoading, error, isError, isSuccess }] = useCreateUserMutation();
   const {
     register,
     handleSubmit,
@@ -34,6 +37,19 @@ export default function Signup() {
       phone: "01786635131",
     },
   });
+
+
+  useEffect(() => {
+    if (error) {
+      console.log(error)
+      error.data.errorSources.map((e) => toast.error(e.message));
+    }
+    if (isSuccess) {
+      navigate('/login')
+    }
+  }, [isError, isSuccess])
+
+
   const onSubmit = (data: FormInputs) => {
     const { name, address, email, phone, password } = data;
     const userData = {
@@ -46,12 +62,9 @@ export default function Signup() {
     };
     createUser(userData);
   };
-  // if (isLoading) return <p>Loading..</p>;
-  // console.log(data, isError, isLoading, error);
-  if (data?.success) {
-    console.log(data.data);
-    // dispatch(data?.data);
-  }
+
+
+
 
   return (
     <MainLayout>
@@ -129,7 +142,7 @@ export default function Signup() {
 
           <label htmlFor="password">
             <input
-              type="password"
+              type={!showPassword ? 'text' : 'password'}
               {...register("password", {
                 required: "Password is required!",
                 minLength: {
@@ -139,6 +152,21 @@ export default function Signup() {
               })}
               placeholder="Enter your password"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "40%",
+                transform: "translateY(-50%)",
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
             <span>PASSWORD</span>
           </label>
 
@@ -149,7 +177,7 @@ export default function Signup() {
           </div>
           <label htmlFor="confirm_password">
             <input
-              type="password"
+              type={!showConfirmPassword ? 'text' : 'password'}
               {...register("confirm_password", {
                 required: "Confirm password is required!",
                 validate: (value) =>
@@ -157,6 +185,21 @@ export default function Signup() {
               })}
               placeholder="Confirm your password"
             />
+            <button
+              type="button"
+              onClick={() => setshowConfirmPassword(!showConfirmPassword)}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "40%",
+                transform: "translateY(-50%)",
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
             <span>CONFIRM PASSWORD</span>
           </label>
           <span>
@@ -189,9 +232,8 @@ export default function Signup() {
 
           <input
             disabled={!clicked}
-            className={`${
-              !clicked ? "bg-gray-400 cursor-not-allowed" : "bg-[#394867]"
-            } border-none text-white`}
+            className={`${!clicked ? "bg-gray-400 cursor-not-allowed" : "bg-[#394867]"
+              } border-none text-white`}
             type="submit"
             value={`${isLoading ? "Loading..." : "Submit"}`}
           />

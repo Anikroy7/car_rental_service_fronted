@@ -1,6 +1,14 @@
 import { Link } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../redux/hook";
+import { logout } from "../../redux/features/auth/authSlice";
 
 export default function Header() {
+  const user = useAppSelector(state => state.auth);
+  const dispatch = useAppDispatch()
+  const handleLogout = () => {
+    dispatch(logout({}));
+    localStorage.removeItem('userInfo')
+  }
   return (
     <>
       <div className="navbar bg-base-100">
@@ -49,7 +57,7 @@ export default function Header() {
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
-            
+
             <li>
               <details>
                 <summary>Parent</summary>
@@ -66,11 +74,14 @@ export default function Header() {
             <li>
               <Link to={'/login'}>Login</Link>
             </li>
+            <li>
+              <Link to={'/about'}>About</Link>
+            </li>
           </ul>
         </div>
-        <div className="navbar-end">
-          <a className="btn">Button</a>
-        </div>
+        {user?.email && <div onClick={handleLogout} className="navbar-end">
+          <span className="btn">Logout</span>
+        </div>}
       </div>
     </>
   );
