@@ -1,9 +1,12 @@
-import App from "../App";
+import Carousel from "./Carousel";
+import Location from "./Location";
 
-export default function Home() {
+export default function HomePage() {
   return (
     <>
-      <App />
+      <Carousel />
+      <Location />
+
     </>
   );
 }

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import MainLayout from "../components/layouts/MainLayout";
 import { AboutUs } from "../components/ui/AboutUs";
 import { useAppSelector } from "../redux/hook";

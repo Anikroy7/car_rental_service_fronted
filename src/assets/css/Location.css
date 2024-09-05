@@ -1,0 +1,47 @@
+.loc-sec {
+
+    /* z-index: 20; */
+    padding: 50px;
+    position: relative;
+    z-index: 10;
+}
+
+.loc-sec .main-sec {
+    background-color: white;
+    display: flex;
+    column-gap: 20px;
+    border-radius: 10px;
+    height: 190px;
+    justify-content: center;
+    align-items: center;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    margin-top: -170px;
+    position: relative;
+    z-index: 50;
+}
+
+.loc-sec .main-sec .pick {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+.loc-sec .main-sec .pick label {
+    color: black;
+    font-weight: 700;
+}
+
+.loc-sec .main-sec .pick p {
+    border: 1px solid darkgrey;
+    padding: 6px 20px;
+    border-radius: 10px;
+}
+
+.loc-sec .main-sec .pick input {
+    padding: 10px 30px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #0043ff8c;
+}

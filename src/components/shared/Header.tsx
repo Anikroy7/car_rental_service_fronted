@@ -9,9 +9,21 @@ export default function Header() {
     dispatch(logout({}));
     localStorage.removeItem('userInfo')
   }
+  const navItems = <>
+    <li>
+      <Link to={'/'}>Home</Link>
+    </li>
+
+    <li>
+      <Link to={'/about'}>About us</Link>
+    </li>
+    <li>
+      <Link to={'/All Cars'}>All Cars</Link>
+    </li>
+  </>
   return (
     <>
-      <div className="navbar bg-base-100">
+      <div className="navbar bg-black text-white font-bold shadow-md sticky top-0 z-50 h-[6rem]">
         <div className="navbar-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -34,54 +46,24 @@ export default function Header() {
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
             >
-              <li>
-                <a>login</a>
-              </li>
-              <li>
-                <a>Parent</a>
-                <ul className="p-2">
-                  <li>
-                    <a>Submenu 1</a>
-                  </li>
-                  <li>
-                    <a>Submenu 2</a>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                <a>Item 3</a>
-              </li>
+              {navItems}
             </ul>
           </div>
           <a className="btn btn-ghost text-xl" href="/">daisyUI</a>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
-
-            <li>
-              <details>
-                <summary>Parent</summary>
-                <ul className="p-2">
-                  <li>
-                    <a>Submenu 1</a>
-                  </li>
-                  <li>
-                    <a>Submenu 2</a>
-                  </li>
-                </ul>
-              </details>
-            </li>
-            <li>
-              <Link to={'/login'}>Login</Link>
-            </li>
-            <li>
-              <Link to={'/about'}>About</Link>
-            </li>
+            {navItems}
           </ul>
         </div>
-        {user?.email && <div onClick={handleLogout} className="navbar-end">
+        {user?.email ? <div onClick={handleLogout} className="navbar-end">
           <span className="btn">Logout</span>
-        </div>}
+        </div> : <>
+        <div onClick={handleLogout} className="navbar-end">
+          <Link to={'/signup'} className=" mr-5">Signup</Link>
+          <Link to={'/login'} className="">Login</Link>
+        </div>
+        </>}
       </div>
     </>
   );

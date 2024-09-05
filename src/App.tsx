@@ -1,10 +1,11 @@
-import Signup from "./pages/auth/Signup";
+import MainLayout from "./components/layouts/MainLayout";
+import HomePage from "./pages/HomePage";
 
 function App() {
   return (
-    <>
-      <Signup />
-    </>
+    <MainLayout>
+      <HomePage />
+    </MainLayout>
   );
 }
 
