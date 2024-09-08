@@ -56,7 +56,7 @@ label > input:focus + span {
 .termofuse {
     display: flex;
     align-items: center;
-    justify-content: center;
+    /* justify-content: sace-between; */
     gap: 10px;
     margin-bottom: 15px;
 }

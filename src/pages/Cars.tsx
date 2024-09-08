@@ -40,7 +40,7 @@ export default function Cars() {
                         </div>
                     </div>
                 </div>
-
+{/* 
                 <div className="flex gap-6 bg-white border border-gray-100 p-6 rounded-xl shadow-md">
                     <img className="w-64 h-72 rounded-xl" src="https://platform.cstatic-images.com/medium/in/v2/stock_photos/07827872-c533-4f5f-8931-3a911250aaf0/96548bd5-fb31-4570-b31a-517e2ebe5408.png" alt="Card image" />
                     <div className="flex flex-col flex-grow justify-between p-4">
@@ -97,7 +97,7 @@ export default function Cars() {
                             </span>
                         </div>
                     </div>
-                </div>
+                </div> */}
             </div>
         </section>
     )

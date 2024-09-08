@@ -49,7 +49,8 @@ export default function Header() {
               {navItems}
             </ul>
           </div>
-          {/* <img width={50} src="https://tse2.mm.bing.net/th?id=OIP.nR2RlFpx5KeaZ_ujqNksBAHaGa&pid=Api&P=0&h=220" alt="" />  */}    EasyRide Rentals   </div>
+         <Link to={'/'}> <img width={100} src="https://www.pngmart.com/files/22/Car-Logo-PNG-Clipart.png" alt="" />    </Link>
+         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
             {navItems}

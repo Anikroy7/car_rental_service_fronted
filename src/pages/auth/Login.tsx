@@ -50,8 +50,8 @@ export default function Login() {
   }
   return (
     <MainLayout>
-      <section className="flex justify-center items-center h-screen ">
-        <form onSubmit={handleSubmit(onSubmit)}>
+      <section className="flex justify-center items-center h-screen bg-slate-200">
+        <form onSubmit={handleSubmit(onSubmit)} className="z-10">
           <h1>Login</h1>
 
           <div className="text-red-500 my-2">
@@ -107,13 +107,13 @@ export default function Login() {
           <div className="my-2">
             <span>
               New to car rental service?
-              <Link className="text-blue-600 ms-2 font-semibold underline" to="/">
+              <Link className="text-blue-600 ms-2 font-semibold underline" to="/signup">
                 Signup here
               </Link>
             </span>
           </div>
 
-          <input type="submit" value="Submit" className="bg-green-500 border-none hover:bg-green-600 cursor-pointer" />
+          <input type="submit" value="Submit" className="bg-gray-900 text-white border-none hover:bg-gray-600 cursor-pointer" />
         </form>
       </section>
     </MainLayout>

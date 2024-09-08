@@ -11,7 +11,7 @@
     display: flex;
     column-gap: 20px;
     border-radius: 10px;
-    height: 190px;
+    /* height: 190px; */
     justify-content: center;
     align-items: center;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
@@ -44,4 +44,19 @@
     border-radius: 10px;
     cursor: pointer;
     background-color: #0043ff8c;
+}
+
+@media (max-width: 640px) {
+    .main-sec {
+        display: flex;
+        /* flex-direction: column; */
+        flex-wrap: wrap;
+        position: static;
+        height: 800px;
+        background-color: #000;
+
+    }
+    .main-sec .pick{
+        width: 50%;
+    }
 }

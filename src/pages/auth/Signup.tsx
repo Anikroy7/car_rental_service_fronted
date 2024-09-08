@@ -68,9 +68,9 @@ export default function Signup() {
 
   return (
     <MainLayout>
-      <section className="flex justify-center items-center">
-        <form onSubmit={handleSubmit(onSubmit)} className="z-10">
-          <h1>SIGN UP</h1>
+      <section className="flex justify-center items-center bg-gray-200">
+        <form onSubmit={handleSubmit(onSubmit)} className="z-10 w-[35%]">
+          <h1 className="font-bold">SIGN UP</h1>
 
           <div className="text-red-500 my-2">
             {errors.name && <p>{errors.name.message}</p>}
@@ -232,7 +232,7 @@ export default function Signup() {
 
           <input
             disabled={!clicked}
-            className={`${!clicked ? "bg-gray-400 cursor-not-allowed" : "bg-[#394867]"
+            className={`${!clicked ? "bg-gray-400 cursor-not-allowed" : "bg-[#080c15] cursor-pointer hover:bg-[#20283b]"
               } border-none text-white`}
             type="submit"
             value={`${isLoading ? "Loading..." : "Submit"}`}
