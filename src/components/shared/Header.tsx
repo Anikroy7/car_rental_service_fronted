@@ -49,8 +49,7 @@ export default function Header() {
               {navItems}
             </ul>
           </div>
-          <a className="btn btn-ghost text-xl" href="/">daisyUI</a>
-        </div>
+          <img width={50} src="https://tse2.mm.bing.net/th?id=OIP.nR2RlFpx5KeaZ_ujqNksBAHaGa&pid=Api&P=0&h=220" alt="" />        </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
             {navItems}
@@ -59,10 +58,10 @@ export default function Header() {
         {user?.email ? <div onClick={handleLogout} className="navbar-end">
           <span className="btn">Logout</span>
         </div> : <>
-        <div onClick={handleLogout} className="navbar-end">
-          <Link to={'/signup'} className=" mr-5">Signup</Link>
-          <Link to={'/login'} className="">Login</Link>
-        </div>
+          <div onClick={handleLogout} className="navbar-end">
+            <Link to={'/signup'} className=" mr-5">Signup</Link>
+            <Link to={'/login'} className="">Login</Link>
+          </div>
         </>}
       </div>
     </>

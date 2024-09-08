@@ -69,7 +69,7 @@ export default function Signup() {
   return (
     <MainLayout>
       <section className="flex justify-center items-center">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className="z-10">
           <h1>SIGN UP</h1>
 
           <div className="text-red-500 my-2">
