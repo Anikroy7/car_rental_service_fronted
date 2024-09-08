@@ -1,5 +1,5 @@
 import '../assets/css/Cars.css'
-import { FaHeart, FaStar, FaRegStar, FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa'
+import { FaHeart, FaStar, FaRegStar, FaMapMarkerAlt } from 'react-icons/fa'
 export default function Cars() {
     return (
         <section>

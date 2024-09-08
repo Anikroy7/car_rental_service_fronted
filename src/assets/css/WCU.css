@@ -1,0 +1,169 @@
+
+.container {
+    margin: 50px auto;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background-image: url("https://i.ibb.co/jVL0zvC/section-img.jpg");
+    background-size: cover;
+    background-position: 43%;
+    opacity: .8;
+    position: relative; 
+    margin-top: 100px;   
+}
+
+.center-div {
+   position: absolute;
+   top: 45%;
+   margin-top: -30px;
+   width: 80%;
+   left: 50%;
+   transform: translate(-50%,-50%); 
+}
+
+.center-div h2 {
+    font-weight: bold;
+    font-size: 20px;
+    color: #fff;
+    text-align: center;
+    margin-top: 100px;
+}
+
+.center-div p {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    color: #ccc;
+    line-height: 1.8;
+
+}
+
+.choices {
+    display: flex;
+}
+
+.left-top,
+.right-top,
+.right-bottom,
+.left-bottom {
+    position: absolute;
+    display: flex;
+    transition: .6s;
+    cursor: pointer;
+    width: 100%;
+    user-select: none;
+}
+
+.left-top:hover,
+.right-top:hover,
+.right-bottom:hover,
+.left-bottom:hover {
+    transform: scale(1.1);
+}
+
+.left-top {
+    left: -70%;
+    top:  3%;
+}
+
+.right-top {
+    left: 70%;
+    top: 3%;
+}
+
+.right-bottom {
+    left: 70%;
+    top: 80%;
+}
+
+.left-bottom {
+    left: -70%;
+    top: 80%;
+}
+
+.left-top-circle,
+.right-top-circle,
+.right-bottom-circle,
+.left-bottom-circle {
+    position: relative;   
+    background-color: #fff;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+   
+}
+
+.left-top-circle{
+    left: 81%;    
+}
+
+
+.left-bottom-circle {
+    left: 81%;
+}
+
+.left-top-circle img,
+.right-top-circle img,
+.right-bottom-circle img,
+.left-bottom-circle img {
+    width: 70%;
+    display: block;
+    position: absolute;
+    top: 15%;
+    left: 12%;
+}
+
+.left-top-text,
+.right-top-text,
+.right-bottom-text,
+.left-bottom-text {
+    position: relative;
+    padding: 8px;
+    width: 80%;
+   
+}
+
+.left-top-text {
+    left: -27%;
+}
+
+.right-top-text {
+    left: 7.5%;
+}
+
+.right-bottom-text {
+    left: 7.5%;
+    top: 80%;
+}
+
+.left-bottom-text {
+    left: -27%;
+}
+
+.left-top-text h3,
+.right-top-text h3,
+.right-bottom-text h3,
+.left-bottom-text h3 {
+    text-align: right;
+    color: #263c41;
+    opacity: .9;
+    font-size: 22px;
+}
+
+.right-top-text h3,
+.right-bottom-text h3{
+    text-align: left;
+}
+
+.left-top-text p,
+.right-top-text p,
+.right-bottom-text p,
+.left-bottom-text p {
+    margin-top: 30px;
+    color: #979dac;
+    font-weight: bold;
+    line-height: 1.4;
+    text-align: justify;
+    font-size: 16px;
+}

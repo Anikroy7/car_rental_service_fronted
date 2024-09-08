@@ -19,7 +19,7 @@ export default function Carousel() {
           modules={[Autoplay, Pagination, Navigation]}
           >
         <SwiperSlide>
-          <img src="https://www.acura.com/-/media/Acura-Platform/Vehicle-Pages/ZDX/2024/overview-page/01-hero/v2/Acura-2024-Overview-Hero_XL.jpg" alt="Car 1" />
+          <img  src="https://www.acura.com/-/media/Acura-Platform/Vehicle-Pages/ZDX/2024/overview-page/01-hero/v2/Acura-2024-Overview-Hero_XL.jpg" alt="Car 1" />
         </SwiperSlide>
         <SwiperSlide>
           <img src="https://www.acura.com/-/media/Acura-Platform/Vehicle-Pages/ZDX/2024/overview-page/05-360/Exterior/Large/Double-Apex-Blue-Pearl/Acura_2024_ZDX_EXT_360_DoubleApexBluePearl_0001.jpg" alt="Car 1" />
