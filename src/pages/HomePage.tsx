@@ -10,9 +10,9 @@ export default function HomePage() {
     <>
       <Carousel />
       <Location />
-      <Cars/>
-      <WhyChooseUs/>
-      <Testimonial/>
+      <Cars />
+      {/* <WhyChooseUs/> */}
+      <Testimonial />
       <OurAchievement />
     </>
   );

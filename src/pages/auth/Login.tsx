@@ -9,14 +9,13 @@ import toast from "react-hot-toast";
 type FormInputs = {
   email: string;
   password: string;
-}
-
-
+};
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  const navigate= useNavigate();
-  const [loginUser, { data, isLoading, isError, error }] = useLoginUserMutation();
+  const navigate = useNavigate();
+  const [loginUser, { data, isLoading, isError, error }] =
+    useLoginUserMutation();
   const {
     register,
     handleSubmit,
@@ -25,29 +24,28 @@ export default function Login() {
 
   useEffect(() => {
     if (error) {
-      console.log(error)
+      console.log(error);
       error.data.errorSources.map((e) => toast.error(e.message));
     }
     if (data) {
       console.log(data, data?.message);
       const userInfo = {
         email: data.data.email,
-        role: data.data.role
-      }
-      localStorage.setItem('userInfo', JSON.stringify(userInfo));
-      navigate('/about')
+        role: data.data.role,
+      };
+      localStorage.setItem("userInfo", JSON.stringify(userInfo));
+      navigate("/about");
     }
-  }, [isError, data])
+  }, [isError, data]);
 
   const onSubmit = (data) => {
-    console.log('log in data', data)
-    loginUser({...data});
-
-  }
+    console.log("log in data", data);
+    loginUser({ ...data });
+  };
   //togle password
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
-  }
+  };
   return (
     <MainLayout>
       <section className="flex justify-center items-center h-screen bg-slate-200">
@@ -75,7 +73,7 @@ export default function Login() {
 
           <label htmlFor="password">
             <input
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               {...register("password", {
                 required: "Password is required!",
                 minLength: {
@@ -107,13 +105,26 @@ export default function Login() {
           <div className="my-2">
             <span>
               New to car rental service?
-              <Link className="text-blue-600 ms-2 font-semibold underline" to="/signup">
+              <Link
+                className="text-blue-600 ms-2 font-semibold underline"
+                to="/signup"
+              >
                 Signup here
+              </Link>
+            </span>
+            <br />
+            <span>
+              <Link to="/forget-password" className="text-blue-600">
+                Forget password?
               </Link>
             </span>
           </div>
 
-          <input type="submit" value="Submit" className="bg-gray-900 text-white border-none hover:bg-gray-600 cursor-pointer" />
+          <input
+            type="submit"
+            value="Submit"
+            className="bg-gray-900 text-white border-none hover:bg-gray-600 cursor-pointer"
+          />
         </form>
       </section>
     </MainLayout>

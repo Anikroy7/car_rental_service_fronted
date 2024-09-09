@@ -18,10 +18,11 @@ type FormInputs = {
 
 export default function Signup() {
   const [clicked, setClicked] = useState(false);
-  const [showPassword, setShowPassword] = useState(true)
-  const [showConfirmPassword, setshowConfirmPassword] = useState(true)
-  const navigate = useNavigate()
-  const [createUser, {  isLoading, error, isError, isSuccess }] = useCreateUserMutation();
+  const [showPassword, setShowPassword] = useState(true);
+  const [showConfirmPassword, setshowConfirmPassword] = useState(true);
+  const navigate = useNavigate();
+  const [createUser, { isLoading, error, isError, isSuccess }] =
+    useCreateUserMutation();
   const {
     register,
     handleSubmit,
@@ -38,17 +39,15 @@ export default function Signup() {
     },
   });
 
-
   useEffect(() => {
     if (error) {
-      console.log(error)
+      console.log(error);
       error.data.errorSources.map((e) => toast.error(e.message));
     }
     if (isSuccess) {
-      navigate('/login')
+      navigate("/login");
     }
-  }, [isError, isSuccess])
-
+  }, [isError, isSuccess]);
 
   const onSubmit = (data: FormInputs) => {
     const { name, address, email, phone, password } = data;
@@ -62,9 +61,6 @@ export default function Signup() {
     };
     createUser(userData);
   };
-
-
-
 
   return (
     <MainLayout>
@@ -142,7 +138,7 @@ export default function Signup() {
 
           <label htmlFor="password">
             <input
-              type={!showPassword ? 'text' : 'password'}
+              type={!showPassword ? "text" : "password"}
               {...register("password", {
                 required: "Password is required!",
                 minLength: {
@@ -177,7 +173,7 @@ export default function Signup() {
           </div>
           <label htmlFor="confirm_password">
             <input
-              type={!showConfirmPassword ? 'text' : 'password'}
+              type={!showConfirmPassword ? "text" : "password"}
               {...register("confirm_password", {
                 required: "Confirm password is required!",
                 validate: (value) =>
@@ -232,8 +228,11 @@ export default function Signup() {
 
           <input
             disabled={!clicked}
-            className={`${!clicked ? "bg-gray-400 cursor-not-allowed" : "bg-[#080c15] cursor-pointer hover:bg-[#20283b]"
-              } border-none text-white`}
+            className={`${
+              !clicked
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-[#080c15] cursor-pointer hover:bg-[#20283b]"
+            } border-none text-white`}
             type="submit"
             value={`${isLoading ? "Loading..." : "Submit"}`}
           />

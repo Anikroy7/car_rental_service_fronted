@@ -4,15 +4,11 @@ export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
     // baseUrl: "https://assignment-three-two.vercel.app/api",
-    baseUrl: 'http://localhost:5000/api',
+    baseUrl: "http://localhost:5000/api",
   }),
-  //   tagTypes: ["auth"],
+  
   endpoints: (builder) => ({
-    // getProducts: builder.query({
-    //   query: () => "/products",
-    //   providesTags: ["products"],
-    // }),
-
+    
     createUser: builder.mutation({
       query: (data) => {
         return {
@@ -33,7 +29,37 @@ export const authApi = createApi({
       },
       //   invalidatesTags: ["auth"],
     }),
+
+    forgetPassword: builder.mutation({
+      query: (data) => {
+        return {
+          url: "/auth/forget-password",
+          method: "POST",
+          body: data,
+        };
+      },
+      //   invalidatesTags: ["auth"],
+    }),
+    resetPassword: builder.mutation({
+      query: (data) => {
+        console.log('resrt data', data)
+        return {
+          url: "/auth/reset-password",
+          method: "POST",
+          body: data.bodyData,
+          headers: {
+             Authorization: `Bearer ${data.token}`
+          }
+        };
+      },
+      //   invalidatesTags: ["auth"],
+    }),
   }),
 });
 
-export const { useCreateUserMutation , useLoginUserMutation} = authApi;
+export const {
+  useCreateUserMutation,
+  useLoginUserMutation,
+  useForgetPasswordMutation,
+  useResetPasswordMutation
+} = authApi;
