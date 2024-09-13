@@ -10,6 +10,7 @@ import { PrivateRoute } from "../pages/auth/PrivateRoute";
 import Home from "../pages/dashboad/Home";
 import Dashboard from "../pages/dashboad/Dashboard";
 import UsersTable from "../pages/dashboad/UsersTable";
+import AddCarForm from "../pages/dashboad/addCarForm";
 
 const router = createBrowserRouter([
   {
@@ -53,7 +54,11 @@ const router = createBrowserRouter([
       {
         path: 'manage/users',
         element: <UsersTable />
-      }
+      },
+      {
+        path: 'manage/cars/add',
+        element: <AddCarForm />
+      },
     ]
   }
 ]);

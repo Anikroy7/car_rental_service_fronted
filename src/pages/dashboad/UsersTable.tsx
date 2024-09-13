@@ -3,7 +3,7 @@ import { useGetAllUsersQuery, useUpdateAUserMutation } from "../../redux/api/use
 
 export default function UsersTable() {
 
-    const { data, error, isLoading } = useGetAllUsersQuery(undefined);
+    const { data , isLoading } = useGetAllUsersQuery(undefined);
     const [updateUser, { data: updateData, error: updateError }] = useUpdateAUserMutation()
     if (isLoading) return <Loading />
 
