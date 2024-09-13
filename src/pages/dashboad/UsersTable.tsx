@@ -1,11 +1,33 @@
 import Loading from "../../components/ui/Loading";
-import { useGetAllUsersQuery } from "../../redux/api/userApi"
+import { useGetAllUsersQuery, useUpdateAUserMutation } from "../../redux/api/userApi"
 
 export default function UsersTable() {
 
     const { data, error, isLoading } = useGetAllUsersQuery(undefined);
+    const [updateUser, { data: updateData, error: updateError }] = useUpdateAUserMutation()
     if (isLoading) return <Loading />
-    console.log(data, error)
+
+    const handleUserStatus = (status: string) => {
+        const isConfirmed = window.confirm(`Are you sure? User will be ${status}.`);
+        if (isConfirmed) {  
+            updateUser({ status: status })
+        }
+    }
+    const handlelDelteUser =()=>{
+        const isConfirmed = window.confirm(`Are you sure? User will be deleted.`);
+        if (isConfirmed) {  
+            updateUser({ isDeleted: true })
+        }
+    }
+    const handleMakeAdmin=()=>{
+        const isConfirmed = window.confirm(`Are you sure? User will be admin.`);
+        if (isConfirmed) {  
+            updateUser({ role:'admin' })
+        }
+    }
+
+    console.log(updateData, updateError);
+
     return (
         <>
             <div className="overflow-x-auto">
@@ -22,51 +44,44 @@ export default function UsersTable() {
                         </tr>
                     </thead>
                     <tbody>
-                        {/* row 1 */}
                         {
-                            data.map(({ name, email, address, phone, role, status }) => <tr>
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle h-12 w-12">
-                                                <img
-                                                    src="https://img.daisyui.com/images/profile/demo/3@94.webp"
-                                                    alt="Avatar Tailwind CSS Component" />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div className="font-bold">{name}</div>
-                                            <div className="text-sm opacity-50">{address}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    {email}
-                                </td>
-                                <td>{phone}</td>
-                                <td>{role}</td>
-                                <td >
-                                    {status === 'active' ? <div className="flex items-center gap-2"><input type="radio" name="radio-5" className="radio radio-success" defaultChecked /> <span>{status}</span></div> : <div className="flex items-center gap-2"><input type="radio" name="radio-5" className="radio radio-error" defaultChecked /> <span>{status}</span></div>
-                                    }
+                           data.length>0? data?.map(({ name, email, address, phone, role, status }) => <tr>
+                           <td>
+                               <div className="flex items-center gap-3">
+                                   <div className="avatar">
+                                       <div className="mask mask-squircle h-12 w-12">
+                                           <img
+                                               src="https://tse4.mm.bing.net/th?id=OIP.AlIScK6urTegkZ178dAAGgHaHa&pid=Api&P=0&h=220"
+                                               alt="Avatar Tailwind CSS Component" />
+                                       </div>
+                                   </div>
+                                   <div>
+                                       <div className="font-bold">{name}</div>
+                                       <div className="text-sm opacity-50">{address}</div>
+                                   </div>
+                               </div>
+                           </td>
+                           <td>
+                               {email}
+                           </td>
+                           <td>{phone}</td>
+                           <td>{role}</td>
+                           <td >
+                               {status === 'active' ? <div className="flex items-center gap-2"><input type="radio" name="radio-5" className="radio radio-success" defaultChecked /> <span>{status}</span></div> : <div className="flex items-center gap-2"><input type="radio" name="radio-5" className="radio radio-error" defaultChecked /> <span>{status}</span></div>
+                               }
+                           </td>
 
-
-
-                                </td>
-
-                                <th>
-                                    <div className="flex items-center gap-2">
-
-                                        {role === 'user' && <button className="btn btn-sm btn-accent text-white">Make admin</button>}
-                                        {status !== 'blocked' ? <button className="btn btn-sm btn-warning text-white">Disable</button> : <button className="btn btn-sm btn-warning text-white">Active</button>}
-                                        <button className="btn btn-sm btn-error text-white">Delete</button>
-                                    </div>
-                                </th>
-                            </tr>)
+                           <th>
+                               <div className="flex items-center gap-2">
+                                   {role === 'user' && <button onClick={handleMakeAdmin} className="btn btn-sm btn-accent text-white">Make admin</button>}
+                                   {status !== 'blocked' ? <button onClick={() => handleUserStatus('blocked')} className="btn btn-sm btn-error text-white">Disable</button> : <button onClick={() => handleUserStatus('active')} className="btn btn-sm btn-success text-white">Active</button>}
+                                   <button onClick={handlelDelteUser} className="btn btn-sm btn-error text-white">Delete</button>
+                               </div>
+                           </th>
+                       </tr>):<p className="py-3">No users found...</p>
                         }
 
-                        {/* row 2 */}
-
-                        {/* row 3 */}
+                        
 
                     </tbody>
                 </table>

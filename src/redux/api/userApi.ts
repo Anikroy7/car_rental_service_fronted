@@ -10,15 +10,26 @@ export const userApi = createApi({
             headers.set('Authorization', `Bearer ${userInfo.token}`);
             headers.set('Content-Type', 'application/json');
             return headers;
-        }
+        },
+
     }),
+    tagTypes: ['users'],
     endpoints: (builder) => ({
         getAllUsers: builder.query({
             query: () => '/users',
             transformResponse: (response: { data },) => response.data,
+            providesTags:['users']
         }),
+        updateAUser: builder.mutation({
+            query: (data) => ({
+                url: '/users/me',
+                body: data,
+                method: "PUT"
+            }),
+            invalidatesTags: ['users']
+        })
     })
 
 })
 
-export const { useGetAllUsersQuery } = userApi
+export const { useGetAllUsersQuery, useUpdateAUserMutation } = userApi
