@@ -7,8 +7,8 @@ import Signup from "../pages/auth/Signup";
 import ForgetPassword from "../pages/ForgetPassword";
 import ResetPassword from "../pages/ResetPassword";
 import { PrivateRoute } from "../pages/auth/PrivateRoute";
-import Dashboard from "../pages/dashboad/dashboard";
 import Home from "../pages/dashboad/Home";
+import Dashboard from "../pages/dashboad/Dashboard";
 import UsersTable from "../pages/dashboad/UsersTable";
 
 const router = createBrowserRouter([

@@ -1,6 +1,18 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
+import { useAppDispatch } from "../../redux/hook";
+import { useEffect } from "react";
+import { setUser } from "../../redux/features/auth/authSlice";
 
 export default function Dashboard() {
+    const dispatch = useAppDispatch()
+    //login condition
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    useEffect(() => {
+        if (userInfo?.email) {
+            console.log('from main layout, ', userInfo)
+            dispatch(setUser({ ...userInfo }));
+        }
+    }, [userInfo])
     const location = useLocation();
     const paths = location.pathname.split("/");
     console.log(paths)
@@ -23,7 +35,7 @@ export default function Dashboard() {
                                 {/* Sidebar content */}
                                 <div className="font-bold text-2xl text-center my-2"><Link to={'/'}>EasyRide</Link></div>
                                 <li><Link to="/admin/dashboard" className={`btn btn-wide justify-start mt-6 hover:bg-gray-900 hover:text-white ${paths.length < 4 && 'bg-black text-white'}`}>Dashboad</Link></li>
-                                <li><Link to="/admin/dashboard/manage/users" className={`btn btn-wide justify-start mt-2 hover:bg-gray-900 hover:text-white ${paths.includes('users')&& 'bg-black text-white'}`}>Manage Users</Link></li>
+                                <li><Link to="/admin/dashboard/manage/users" className={`btn btn-wide justify-start mt-2 hover:bg-gray-900 hover:text-white ${paths.includes('users') && 'bg-black text-white'}`}>Manage Users</Link></li>
                                 <li><a href="#" className={`btn btn-wide justify-start mt-2 hover:bg-gray-900 hover:text-white `}>Manage Cars</a></li>
                                 <li><a href="#" className={`btn btn-wide justify-start mt-2 hover:bg-gray-900 hover:text-white `}>Manage Return Cars</a></li>
                                 <li><a href="#" className={`btn btn-wide justify-start my-2 hover:bg-gray-900 hover:text-white `}>Manage Bookings</a></li>

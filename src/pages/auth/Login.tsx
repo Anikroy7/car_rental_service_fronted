@@ -24,7 +24,6 @@ export default function Login() {
 
   useEffect(() => {
     if (error) {
-      console.log(error);
       error.data.errorSources.map((e) => toast.error(e.message));
     }
     if (data) {
@@ -32,14 +31,15 @@ export default function Login() {
       const userInfo = {
         email: data.data.email,
         role: data.data.role,
+        token: data.token
+
       };
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
-      navigate("/about");
+      navigate("/");
     }
   }, [isError, data]);
 
   const onSubmit = (data) => {
-    console.log("log in data", data);
     loginUser({ ...data });
   };
   //togle password

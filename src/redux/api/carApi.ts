@@ -7,8 +7,8 @@ export const carApi = createApi({
   endpoints: (builder) => ({
     getCars: builder.query({
       query: () => "/cars",
-      transformResponse: (response: { data },) => response.data,
-      
+      // transformResponse: (response: { data },) => response.data,
+    
       providesTags: ["cars"],
     }),
     getFpCars: builder.query({

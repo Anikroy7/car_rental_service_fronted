@@ -4,12 +4,14 @@ type InitialState = {
   // username: string;
   email: string;
   role: string;
+  token: string;
 };
 
 const initialState: InitialState = {
   // username: "",
   email: "",
   role: "",
+  token:''
 };
 
 const authSlice = createSlice({
@@ -20,11 +22,13 @@ const authSlice = createSlice({
       const user = action.payload;
       state.email = user.email;
       state.role = user.role;
+      state.token= user.token
     },
 
     logout: (state, action) => {
       state.email = '';
       state.role = ''
+      state.token= ''
     }
   },
 });
