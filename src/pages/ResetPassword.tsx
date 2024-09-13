@@ -1,9 +1,10 @@
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import MainLayout from "../components/layouts/MainLayout";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useResetPasswordMutation } from "../redux/api/authApi";
+import toast from "react-hot-toast";
 
 type FormInputs = {
     password: string;
@@ -11,10 +12,11 @@ type FormInputs = {
 };
 
 export default function ResetPassword() {
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [resetPasssword, { data, isLoading, isError, error }] = useResetPasswordMutation()
-    const token = searchParams.get('token');
-    const email = searchParams.get('email');
+    const [resetPasssword, { data, isLoading, isSuccess, error, isError }] = useResetPasswordMutation()
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const email = queryParams.get('email');
+    const token = queryParams.get('token');
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setshowConfirmPassword] = useState(true);
     const { register, handleSubmit, watch, formState: { errors } } = useForm<FormInputs>();
@@ -23,10 +25,16 @@ export default function ResetPassword() {
         if (!token || !email) {
             navigate("/login");
         }
-    }, [email, token])
+        if (error) {
+            toast.error("Something occurs happend!!", { id: 'reset error' });
+        }
+        if (isSuccess) {
+            navigate("/login");
+        }
+    }, [email, token, isSuccess, isError])
     const onSubmit = (data: FormInputs) => {
 
-        console.log(data, email, token);
+        console.log(data, queryParams, email, token);
         const bodyData = {
             newPassword: data.password,
             email
@@ -116,7 +124,7 @@ export default function ResetPassword() {
                                 className="w-full px-4 py-2 font-bold text-white bg-gray-800 rounded-full hover:bg-black focus:outline-none focus:shadow-outline"
                                 type="submit"
                             >
-                                Reset Password
+                                {isLoading ? "Loading..." : "Reset Password"}
                             </button>
                         </div>
                     </form>

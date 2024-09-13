@@ -1,4 +1,4 @@
-import { useGetProductsQuery } from "../../redux/api/productApi";
+import { useGetProductsQuery } from "../../redux/api/carApi";
 import Loading from "./Loading";
 
 export default function Category() {

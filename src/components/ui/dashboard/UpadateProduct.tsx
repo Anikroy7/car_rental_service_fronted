@@ -2,7 +2,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import {
   useGetSingleProductQuery,
   useUpdateProductMutation,
-} from "../../../redux/api/productApi";
+} from "../../../redux/api/carApi";
 import Loading from "../Loading";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";

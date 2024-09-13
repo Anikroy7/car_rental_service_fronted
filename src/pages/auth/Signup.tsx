@@ -44,9 +44,9 @@ export default function Signup() {
       console.log(error);
       error.data.errorSources.map((e) => toast.error(e.message));
     }
-    if (isSuccess) {
-      navigate("/login");
-    }
+      if (isSuccess) {
+        navigate("/login");
+      }
   }, [isError, isSuccess]);
 
   const onSubmit = (data: FormInputs) => {

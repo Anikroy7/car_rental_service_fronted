@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import "../../assets/css/ProductDetails.css";
-import { useGetSingleProductQuery } from "../../redux/api/productApi";
+import { useGetSingleProductQuery } from "../../redux/api/carApi";
 import Loading from "./Loading";
 import { useState } from "react";
 import { useAppDispatch } from "../../redux/hook";

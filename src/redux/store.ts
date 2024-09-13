@@ -1,14 +1,19 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./features/auth/authSlice";
 import { authApi } from "./api/authApi";
+import { carApi } from "./api/carApi";
+import { userApi } from "./api/userApi";
+
 
 const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
+    [carApi.reducerPath]: carApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
     auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware),
+    getDefaultMiddleware().concat(authApi.middleware, carApi.middleware, userApi.middleware),
 });
 
 // Get the type of our store variable

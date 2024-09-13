@@ -20,6 +20,9 @@ export default function Header() {
     <li>
       <Link to={'/All Cars'}>All Cars</Link>
     </li>
+    <li>
+      <Link to={'/admin/dashboard'}>Dashboad</Link>
+    </li>
   </>
   return (
     <>
@@ -49,8 +52,8 @@ export default function Header() {
               {navItems}
             </ul>
           </div>
-         <Link to={'/'}> <img width={100} src="https://www.pngmart.com/files/22/Car-Logo-PNG-Clipart.png" alt="" />    </Link>
-         </div>
+          <Link to={'/'}> <img width={100} src="https://www.pngmart.com/files/22/Car-Logo-PNG-Clipart.png" alt="" />    </Link>
+        </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
             {navItems}

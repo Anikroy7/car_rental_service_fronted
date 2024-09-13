@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useGetFpProductsQuery } from "../../redux/api/productApi";
+import { useGetFpProductsQuery } from "../../redux/api/carApi";
 import Loading from "./Loading";
 import { TProduct } from "../../types";
 

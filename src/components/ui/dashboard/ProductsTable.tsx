@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import {
   useDeleteProductMutation,
   useGetProductsQuery,
-} from "../../../redux/api/productApi";
+} from "../../../redux/api/carApi";
 import Loading from "../Loading";
 import { Link } from "react-router-dom";
 import { TProduct } from "../../../types";

@@ -11,7 +11,7 @@ export default function HomePage() {
       <Carousel />
       <Location />
       <Cars />
-      {/* <WhyChooseUs/> */}
+      <WhyChooseUs/>
       <Testimonial />
       <OurAchievement />
     </>

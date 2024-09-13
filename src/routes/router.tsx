@@ -6,6 +6,10 @@ import AboutUsPage from "../pages/AboutUsPage";
 import Signup from "../pages/auth/Signup";
 import ForgetPassword from "../pages/ForgetPassword";
 import ResetPassword from "../pages/ResetPassword";
+import { PrivateRoute } from "../pages/auth/PrivateRoute";
+import Dashboard from "../pages/dashboad/dashboard";
+import Home from "../pages/dashboad/Home";
+import UsersTable from "../pages/dashboad/UsersTable";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +40,22 @@ const router = createBrowserRouter([
     path: "/login",
     element: <Login />,
   },
+  {
+    path: '/admin/dashboard',
+    element: <PrivateRoute>
+      <Dashboard />
+    </PrivateRoute>,
+    children: [
+      {
+        index: true,
+        element: <Home />
+      },
+      {
+        path: 'manage/users',
+        element: <UsersTable />
+      }
+    ]
+  }
 ]);
 
 export default router;

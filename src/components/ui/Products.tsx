@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useGetProductsQuery } from "../../redux/api/productApi";
+import { useGetProductsQuery } from "../../redux/api/carApi";
 import Filter from "./Filter";
 import ImageSlider from "./ImageSlider";
 import Loading from "./Loading";
