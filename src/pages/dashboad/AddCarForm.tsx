@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaPlus } from "react-icons/fa";
 import ReactQuill from 'react-quill';
@@ -14,10 +15,16 @@ const toolbarOptions = [
 ];
 
 export default function AddCarForm() {
-    const [value, setValue] = useState('');
     const [feature, setFeature] = useState('')
     const [allFeatures, setAllFeatures] = useState([]);
     const imageTypeRegex = /image\/(png|jpg|jpeg)/gm;
+    const {
+        register,
+        handleSubmit,
+        setError,
+        control,
+        formState: { errors },
+    } = useForm()
 
 
     const [imageFiles, setImageFiles] = useState([]);
@@ -32,6 +39,7 @@ export default function AddCarForm() {
             if (file.type.match(imageTypeRegex)) {
                 validImageFiles.push(file);
             }
+
         }
         if (validImageFiles.length) {
             setImageFiles(validImageFiles);
@@ -57,6 +65,10 @@ export default function AddCarForm() {
                 }
                 fileReader.readAsDataURL(file);
             })
+            setError('images', {
+                type: "required",
+                message: ''
+            })
         };
         return () => {
             isCancel = true;
@@ -69,19 +81,18 @@ export default function AddCarForm() {
     }, [imageFiles]);
 
     const addToFeatures = (e) => {
-        e.preventDefault()
+        e.preventDefault();
         if (feature) {
-            if (allFeatures.length < 1) {
-                setAllFeatures([feature]);
-            } else {
-                setAllFeatures([...allFeatures, feature]);
-            }
+            setAllFeatures([...allFeatures, feature]);
+            setFeature('');
+            setError('features', {
+                type: "required",
+                message: ''
+            })
         } else {
-            alert('please enter feature name')
+            alert('Please enter a feature');
         }
-        setFeature('')
-
-    }
+    };
     const removeFromFeatures = (item) => {
         setAllFeatures([...allFeatures.filter(f => f !== item)])
     }
@@ -91,9 +102,13 @@ export default function AddCarForm() {
         // console.log(newImageFiles)
         setImages([...images.filter(i => i !== image)])
     }
+    const onSubmit = (data) => {
+        console.log({ ...data, features: allFeatures, images: imageFiles })
+
+    }
     return (
         <div className="bg-gray-100 mx-auto  py-20 px-12 lg:px-24 shadow-xl mb-24">
-            <form className="w-full">
+            <form onSubmit={handleSubmit(onSubmit)} className="w-full">
                 <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col">
 
                     <div className="-mx-3 md:flex">
@@ -101,22 +116,47 @@ export default function AddCarForm() {
                             <label className="uppercase tracking-wide text-black text-xs font-bold mb-2" htmlFor="application-link">
                                 Car title
                             </label>
-                            <input className="w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 mb-3" id="application-link" type="text" placeholder="Type color title" />
+                            <input className="w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 mb-3" id="application-link" type="text" placeholder="Type color title"
+                                {...register("title", { required: true, maxLength: 50 })} />
+                            <div className="text-red-500">
+                                {errors.title && errors.title.type === "required" && (
+                                    <span>Title is required</span>
+                                )}
+                                {errors.title && errors.title.type === "maxLength" && (
+                                    <span>Max length exceeded</span>
+                                )}
+                            </div>
                         </div>
                     </div>
                     <div className="my-3">
                         <label className="uppercase tracking-wide text-black text-xs font-bold mb-2" htmlFor="location">
                             Description*
                         </label>
-                        <ReactQuill
-                            value={value}
-                            onChange={setValue}
-                            modules={{ toolbar: toolbarOptions }}
+                        <Controller
+                            name="description"
+                            control={control}
+                            defaultValue=""
+                            rules={{ required: 'Description is required' }}  // Validation rule
+                            render={({ field }) => (
+                                <ReactQuill
+                                    {...field}
+                                    theme="snow"
+                                    modules={{ toolbar: toolbarOptions }}
+                                />
+                            )}
                         />
                         {/* <div style={{ marginTop: '20px' }}>
                             <strong>Output:</strong>
                             <div dangerouslySetInnerHTML={{ __html: value }} />
                         </div> */}
+                        <div className="text-red-500">
+                            {errors.description && (
+                                <div className="text-red-500">
+                                    <span>{errors.description.message}</span>
+                                </div>
+                            )}
+
+                        </div>
                     </div>
                     <div className="-mx-3 md:flex mb-2">
                         <div className="md:w-1/2 px-3 mb-6 md:mb-0">
@@ -135,7 +175,15 @@ export default function AddCarForm() {
                                 Price Per hour*
                             </label>
                             <div>
-                                <input className="w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 mb-3" id="application-link" type="number" placeholder="Type price/h" />
+                                <input className="w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 mb-3" id="application-link" type="number" placeholder="Type price/h"  {...register("pricePerHour", { required: true, minLength: 2 })} />
+                                <div className="text-red-500">
+                                    {errors.pricePerHour && errors.pricePerHour.type === "required" && (
+                                        <span>Price is required</span>
+                                    )}
+                                    {errors.pricePerHour && errors.pricePerHour.type === "minLength" && (
+                                        <span>Price should be al least two number</span>
+                                    )}
+                                </div>
                             </div>
                         </div>
                         <div className="md:w-1/2 px-3">
@@ -143,7 +191,13 @@ export default function AddCarForm() {
                                 Color*
                             </label>
                             <div>
-                                <input className="w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 mb-3" id="application-link" type="text" placeholder="valid color name or color values" />
+                                <input className="w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 mb-3" id="application-link" type="text" placeholder="valid color name or color values"    {...register("color", { required: true })} />
+                                <div className="text-red-500">
+                                    {errors.color && errors.color.type === "required" && (
+                                        <span>Color is required</span>
+                                    )}
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -153,12 +207,20 @@ export default function AddCarForm() {
                         </label>
                         <div className="flex items-center space-x-2">
                             {/* Input field */}
-                            <input
-                                onChange={(e) => setFeature(e.target.value)}
-                                type="text"
-                                placeholder="Type here"
-                                className="input input-bordered input-sm flex-grow bg-gray-200 text-black border border-gray-200"
-                                value={feature}
+                            <Controller
+                                name="features"
+                                control={control}
+                                rules={{ required: allFeatures.length === 0 ? "At least one feature should be added." : false }}
+                                render={({ field }) => (
+                                    <input
+                                        {...field}
+                                        value={feature}
+                                        onChange={(e) => setFeature(e.target.value)}
+                                        type="text"
+                                        placeholder="Type here"
+                                        className={`input input-bordered input-sm flex-grow bg-gray-200 text-black border border-gray-200`}
+                                    />
+                                )}
                             />
 
                             {/* Add button with Plus icon */}
@@ -166,6 +228,13 @@ export default function AddCarForm() {
                                 <FaPlus className="mr-1" />
                                 Add
                             </button>
+                        </div>
+                        <div className="text-red-500">
+                            <div className="text-red-500">
+                                {errors.features && (
+                                    <span>{errors.features.message}</span>
+                                )}
+                            </div>
                         </div>
                     </div>
                     <div className="mb-3">
@@ -191,19 +260,34 @@ export default function AddCarForm() {
                         <label className="uppercase tracking-wide text-black text-xs font-bold mb-2" htmlFor="application-link">
                             Images* ( you can upload mutiple images )
                         </label>
-                        <input
-                            className="file-input file-input-bordered w-full"
-                            type="file"
-                            id="file"
-                            onChange={(e) => changeHandler(e)}
-                            accept="image/png, image/jpg, image/jpeg"
-                            multiple
-                            style={{ color: 'transparent' }}
+                        <Controller
+                            name="images"
+                            control={control}
+                            rules={{ required: imageFiles.length === 0 ? "At least one image should be added." : false }}
+                            render={(field) => (
+                                <input
+                                    {...field}
+                                    className="file-input file-input-bordered w-full"
+                                    type="file"
+                                    id="file"
+                                    onChange={(e) => changeHandler(e)}
+                                    accept="image/png, image/jpg, image/jpeg"
+                                    multiple
+                                    style={{ color: 'transparent' }}
+                                />
+                            )}
                         />
+                        <div className="text-red-500">
+                            <div className="text-red-500">
+                                {errors.images && (
+                                    <span>{errors.images.message}</span>
+                                )}
+                            </div>
+                        </div>
                     </p>
 
                     {/* Display the count of files dynamically */}
-                    {imageFiles.length > 0 && <p className="my-2">{imageFiles.length} file{ imageFiles.length>1&&'(s)'} uploaded</p>}
+                    {imageFiles.length > 0 && <p className="my-2">{imageFiles.length} file{imageFiles.length > 1 && '(s)'} uploaded</p>}
 
                     {
                         images.length > 0 ?
@@ -229,10 +313,9 @@ export default function AddCarForm() {
                             </div> : null
                     }
                     <div className="-mx-3 md:flex mt-2">
-                        <div className="md:w-full px-3">
-                            <button className="md:w-full bg-gray-900 text-white font-bold py-2 px-4 border-b-4 hover:border-b-2 border-gray-500 hover:border-gray-100 rounded-full">
-                                Button
-                            </button>
+                        <div className="px-3 w-full text-center">
+                            <input value={'ADD'} type="submit" className=" w-[8rem] bg-gray-900 text-white font-bold py-2 px-4 border-gray-500 hover:border-gray-100 rounded-full cursor-pointer" />
+
                         </div>
                     </div>
                 </div>

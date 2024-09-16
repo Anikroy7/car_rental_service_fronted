@@ -12,13 +12,13 @@ export default function Dashboard() {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'))
     useEffect(() => {
         if (userInfo?.email) {
-            console.log('from main layout, ', userInfo)
+            // console.log('from main layout, ', userInfo)
             dispatch(setUser({ ...userInfo }));
         }
     }, [userInfo])
     const location = useLocation();
     const paths = location.pathname.split("/");
-    console.log(paths)
+    // console.log(paths)
 
     return (
         <>
