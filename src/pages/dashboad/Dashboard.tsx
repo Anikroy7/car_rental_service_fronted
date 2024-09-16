@@ -12,7 +12,8 @@ export default function Dashboard() {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'))
     useEffect(() => {
         if (userInfo?.email) {
-            // console.log('from main layout, ', userInfo)
+            // console.log
+            ('from main layout, ', userInfo)
             dispatch(setUser({ ...userInfo }));
         }
     }, [userInfo])
@@ -57,7 +58,13 @@ export default function Dashboard() {
                                                 </Link>
                                             </li>
                                             <li>
-                                                <Link to="/admin/dashboard/manage/users"
+                                                <Link to="/admin/dashboard/manage/cars/update"
+                                                    className={`btn btn-sm w-full justify-start mt-2 hover:bg-gray-900 hover:text-white ${paths.includes('usefrs') && 'bg-black text-white'}`}>
+                                                    Update Car
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="/admin/dashboard/manage/cars/all"
                                                     className={`btn btn-sm w-full justify-start mt-2 hover:bg-gray-900 hover:text-white ${paths.includes('usefrs') && 'bg-black text-white'}`}>
                                                     Update Car
                                                 </Link>

@@ -4,6 +4,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { FaPlus } from "react-icons/fa";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { useCreateCarMutation } from "../../redux/api/carApi";
 
 const toolbarOptions = [
     [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
@@ -18,13 +19,21 @@ export default function AddCarForm() {
     const [feature, setFeature] = useState('')
     const [allFeatures, setAllFeatures] = useState([]);
     const imageTypeRegex = /image\/(png|jpg|jpeg)/gm;
+    const [createCar, { isLoading, data }] = useCreateCarMutation()
     const {
         register,
         handleSubmit,
         setError,
         control,
         formState: { errors },
-    } = useForm()
+    } = useForm({
+        defaultValues: {
+            name: 'car 1',
+            description: 'this si descripotn',
+            pricePerHour: 250,
+            color: 'red'
+        }
+    })
 
 
     const [imageFiles, setImageFiles] = useState([]);
@@ -103,9 +112,30 @@ export default function AddCarForm() {
         setImages([...images.filter(i => i !== image)])
     }
     const onSubmit = (data) => {
-        console.log({ ...data, features: allFeatures, images: imageFiles })
+        // console.log(data)
+        console.log({ ...data, features: allFeatures, images: imageFiles, pricePerHour: parseInt(data.pricePerHour), isElectric: data.isElectric === 'yes' })
+        const carData = { ...data, features: allFeatures, images: imageFiles, pricePerHour: parseInt(data.pricePerHour), isElectric: data.isElectric === 'yes' };
+        const formData = new FormData();
 
+        Object.entries(carData).forEach(([key, value]) => {
+            if (key !== "images" && key !== 'features') {
+                formData.append(
+                    key,
+                    typeof value !== "number" ? value.toString() : value
+                );
+            }
+            if (key === "features") {
+                formData.append(key, JSON.stringify(value));
+            }
+        });
+
+        Array.from(carData.images).forEach((file) => {
+            formData.append("images", file as any);
+        });
+        createCar(formData);
     }
+
+    // console.log(data)
     return (
         <div className="bg-gray-100 mx-auto  py-20 px-12 lg:px-24 shadow-xl mb-24">
             <form onSubmit={handleSubmit(onSubmit)} className="w-full">
@@ -114,15 +144,15 @@ export default function AddCarForm() {
                     <div className="-mx-3 md:flex">
                         <div className="md:w-full px-3">
                             <label className="uppercase tracking-wide text-black text-xs font-bold mb-2" htmlFor="application-link">
-                                Car title
+                                Car name
                             </label>
-                            <input className="w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 mb-3" id="application-link" type="text" placeholder="Type color title"
-                                {...register("title", { required: true, maxLength: 50 })} />
+                            <input className="w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 mb-3" id="application-link" type="text" placeholder="Type color name"
+                                {...register("name", { required: true, maxLength: 50 })} />
                             <div className="text-red-500">
-                                {errors.title && errors.title.type === "required" && (
-                                    <span>Title is required</span>
+                                {errors.name && errors.name.type === "required" && (
+                                    <span>Name is required</span>
                                 )}
-                                {errors.title && errors.title.type === "maxLength" && (
+                                {errors.name && errors.name.type === "maxLength" && (
                                     <span>Max length exceeded</span>
                                 )}
                             </div>
@@ -159,14 +189,19 @@ export default function AddCarForm() {
                         </div>
                     </div>
                     <div className="-mx-3 md:flex mb-2">
+                        {/* Is Electric Field */}
                         <div className="md:w-1/2 px-3 mb-6 md:mb-0">
-                            <label className="uppercase tracking-wide text-black text-xs font-bold mb-2" htmlFor="location">
-                                Is Electrict
+                            <label className="uppercase tracking-wide text-black text-xs font-bold mb-2" htmlFor="isElectric">
+                                Is Electric
                             </label>
                             <div>
-                                <select className="w-full bg-gray-200 border border-gray-200 text-black text-xs py-3 px-4 pr-8 mb-3 rounded" id="location">
-                                    <option>Yes</option>
-                                    <option>No</option>
+                                <select
+                                    {...register('isElectric')}
+                                    className="w-full bg-gray-200 border border-gray-200 text-black text-xs py-3 px-4 pr-8 mb-3 rounded"
+                                    id="isElectric"
+                                >
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
                                 </select>
                             </div>
                         </div>
@@ -314,7 +349,7 @@ export default function AddCarForm() {
                     }
                     <div className="-mx-3 md:flex mt-2">
                         <div className="px-3 w-full text-center">
-                            <input value={'ADD'} type="submit" className=" w-[8rem] bg-gray-900 text-white font-bold py-2 px-4 border-gray-500 hover:border-gray-100 rounded-full cursor-pointer" />
+                            <input value={isLoading ? 'Loading...' : 'ADD'} type="submit" className=" w-[8rem] bg-gray-900 text-white font-bold py-2 px-4 border-gray-500 hover:border-gray-100 rounded-full cursor-pointer" />
 
                         </div>
                     </div>

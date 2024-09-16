@@ -5,14 +5,14 @@ import Loading from '../components/ui/Loading'
 export default function Cars() {
     const { data: cars, isLoading } = useGetCarsQuery(undefined)
     if (isLoading) return <Loading />
-    console.log('cars fdata', cars)
+    console.log('cars fdata', cars.data)
     return (
         <section>
             <div> <h1 className="text-4xl text-indigo-900 font-semibold">Stays in Dhaka, BD.</h1></div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-5 px-20 gap-9">
                 {
-                    cars.length ? cars.map(({ name, color, description, pricePerHour, features }) => <div className="flex my-3 flex-col md:flex-row gap-6 bg-white border border-gray-100 p-4 md:p-6 rounded-xl shadow-md">
+                    cars.data?.length > 0 ? cars.data.map(({ name, color, description, pricePerHour, features }) => <div className="flex my-3 flex-col md:flex-row gap-6 bg-white border border-gray-100 p-4 md:p-6 rounded-xl shadow-md">
                         <img
                             className="w-full h-48 rounded-xl lg:w-64 lg:h-64 sm:object-cover lg:object-fill   "
                             src="https://platform.cstatic-images.com/medium/in/v2/stock_photos/cd74e70d-68ee-44dc-85a8-3edcf3ffe348/acd2cd85-209c-45f2-9033-8c1033ea8745.png"

@@ -7,8 +7,10 @@ export const userApi = createApi({
         prepareHeaders: (headers) => {
             const userInfo = JSON.parse(localStorage.getItem('userInfo'))
             // console.log('user token',token)
-            headers.set('Authorization', `Bearer ${userInfo.token}`);
-            headers.set('Content-Type', 'application/json');
+            if (userInfo?.token) {
+                headers.set('Authorization', `Bearer ${userInfo.token}`);
+                headers.set('Content-Type', 'application/json');
+            }
             return headers;
         },
 
@@ -18,7 +20,7 @@ export const userApi = createApi({
         getAllUsers: builder.query({
             query: () => '/users',
             transformResponse: (response: { data },) => response.data,
-            providesTags:['users']
+            providesTags: ['users']
         }),
         updateAUser: builder.mutation({
             query: (data) => ({
