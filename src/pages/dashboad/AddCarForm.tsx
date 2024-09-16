@@ -29,7 +29,7 @@ export default function AddCarForm() {
     } = useForm({
         defaultValues: {
             name: 'car 1',
-            description: 'this si descripotn',
+            // description: 'this si descripotn',
             pricePerHour: 250,
             color: 'red'
         }

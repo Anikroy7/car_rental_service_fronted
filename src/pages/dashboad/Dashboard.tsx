@@ -66,7 +66,7 @@ export default function Dashboard() {
                                             <li>
                                                 <Link to="/admin/dashboard/manage/cars/all"
                                                     className={`btn btn-sm w-full justify-start mt-2 hover:bg-gray-900 hover:text-white ${paths.includes('usefrs') && 'bg-black text-white'}`}>
-                                                    Update Car
+                                                    All Cars
                                                 </Link>
                                             </li>
                                         </ul>
