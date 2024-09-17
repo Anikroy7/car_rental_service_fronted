@@ -1,12 +1,13 @@
 import { useState } from "react";
 import Loading from "../../components/ui/Loading";
 import { useDeleteCarMutation, useGetCarsQuery } from "../../redux/api/carApi";
+import { Link } from "react-router-dom";
 export default function AllCars() {
 
     const [details, setDetails] = useState('')
     const { data, isLoading } = useGetCarsQuery(undefined);
-    const [deleteCar]= useDeleteCarMutation()
-    
+    const [deleteCar] = useDeleteCarMutation()
+
     if (isLoading) return <Loading />
     const handleUserStatus = (status: string) => {
         const isConfirmed = window.confirm(`Are you sure? User will be ${status}.`);
@@ -14,9 +15,9 @@ export default function AllCars() {
             // updateUser({ status: status })
         }
     }
- const handlelDelteCar =(id: string)=>{
+    const handlelDelteCar = (id: string) => {
         const isConfirmed = window.confirm(`Are you sure? Car will be deleted.`);
-        if (isConfirmed) {  
+        if (isConfirmed) {
             deleteCar(id)
         }
     }
@@ -85,8 +86,8 @@ export default function AllCars() {
                                     <th>
                                         <div className="flex items-center gap-2">
 
-                                            {status !== 'blocked' ? <button onClick={() => handleUserStatus('blocked')} className="btn btn-sm btn-error text-white">Disable</button> : <button onClick={() => handleUserStatus('active')} className="btn btn-sm btn-success text-white">Active</button>}
-                                            <button onClick={()=> handlelDelteCar(_id)} className="btn btn-sm btn-error text-white">Delete</button>
+                                            <Link to={`/admin/dashboard/manage/cars/update/${_id}`}  className="btn btn-sm bg-gray-950 text-white">Update</Link>
+                                            <button onClick={() => handlelDelteCar(_id)} className="btn btn-sm btn-error text-white">Delete</button>
                                         </div>
                                     </th>
 

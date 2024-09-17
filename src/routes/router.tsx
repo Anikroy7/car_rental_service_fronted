@@ -12,6 +12,7 @@ import Dashboard from "../pages/dashboad/Dashboard";
 import UsersTable from "../pages/dashboad/UsersTable";
 import AddCarForm from "../pages/dashboad/addCarForm";
 import AllCars from "../pages/dashboad/AllCars";
+import UpdateCarForm from "../pages/dashboad/UpdateCarForm";
 
 const router = createBrowserRouter([
   {
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
       {
         path: 'manage/cars/add',
         element: <AddCarForm />
+      },
+      {
+        path: 'manage/cars/update/:id',
+        element: <UpdateCarForm />
       },
       {
         path: 'manage/cars/all',
