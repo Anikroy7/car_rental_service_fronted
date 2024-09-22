@@ -14,8 +14,10 @@ type FormInputs = {
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const [loginUser, { data, isLoading, isError, error }] =
+  const [loginUser, { data, isError, error }] =
     useLoginUserMutation();
+  const searchParams = new URLSearchParams(document.location.search);
+  console.log(searchParams.get('redirect_url'))
   const {
     register,
     handleSubmit,
@@ -24,10 +26,16 @@ export default function Login() {
 
   useEffect(() => {
     if (error) {
-      error.data.errorSources.map((e) => toast.error(e.message));
+      console.log(error)  
+      if(error?.data?.errorSources){
+        error?.data?.errorSources?.map((e) => toast.error(e.message));
+      }else{
+        toast.error('Something went wrong');
+      }
+
     }
     if (data) {
-      console.log(data, data?.message);
+      // console.log(data, data?.message);
       const userInfo = {
         email: data.data.email,
         role: data.data.role,
@@ -35,7 +43,11 @@ export default function Login() {
 
       };
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
-      navigate("/");
+      if (searchParams.get('redirect_url')) {
+        navigate(`${searchParams.get('redirect_url')}`)
+      }else{
+        navigate("/");
+      }
     }
   }, [isError, data]);
 

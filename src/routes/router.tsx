@@ -10,9 +10,13 @@ import { PrivateRoute } from "../pages/auth/PrivateRoute";
 import Home from "../pages/dashboad/Home";
 import Dashboard from "../pages/dashboad/Dashboard";
 import UsersTable from "../pages/dashboad/UsersTable";
-import AddCarForm from "../pages/dashboad/addCarForm";
 import AllCars from "../pages/dashboad/AllCars";
 import UpdateCarForm from "../pages/dashboad/UpdateCarForm";
+import { AdminPrivateRoute } from "../pages/auth/AdminPrivateRoute";
+import CarDetails from "../pages/CarDetails";
+import AddCarForm from "../pages/dashboad/AddCarForm";
+import { AllCarsPage } from "../pages/AllCarsPage";
+import Book from "../pages/Book";
 
 const router = createBrowserRouter([
   {
@@ -20,8 +24,20 @@ const router = createBrowserRouter([
     element: <App />,
   },
   {
+    path: "/all-cars",
+    element: <AllCarsPage />,
+  },
+  {
+    path: "/cars/:id",
+    element: <CarDetails />,
+  },
+  {
     path: "/about",
     element: <AboutUsPage />,
+  },
+  {
+    path: "/book/:id",
+    element: <Book />,
   },
   {
     path: "/termsAndConditions",
@@ -55,19 +71,19 @@ const router = createBrowserRouter([
       },
       {
         path: 'manage/users',
-        element: <UsersTable />
+        element: <AdminPrivateRoute><UsersTable /></AdminPrivateRoute>
       },
       {
         path: 'manage/cars/add',
-        element: <AddCarForm />
+        element: <AdminPrivateRoute><AddCarForm /></AdminPrivateRoute>
       },
       {
         path: 'manage/cars/update/:id',
-        element: <UpdateCarForm />
+        element: <AdminPrivateRoute> <UpdateCarForm /></AdminPrivateRoute>
       },
       {
         path: 'manage/cars/all',
-        element: <AllCars />
+        element: <AdminPrivateRoute> <AllCars /></AdminPrivateRoute>
       },
     ]
   }

@@ -3,6 +3,7 @@ import { useAppDispatch } from "../../redux/hook";
 import { useEffect, useState } from "react";
 import { setUser } from "../../redux/features/auth/authSlice";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { Toaster } from "react-hot-toast";
 
 export default function Dashboard() {
     const [isOpen, setIsOpen] = useState(true);
@@ -57,7 +58,7 @@ export default function Dashboard() {
                                                     Add Car
                                                 </Link>
                                             </li>
-                                           
+
                                             <li>
                                                 <Link to="/admin/dashboard/manage/cars/all"
                                                     className={`btn btn-sm w-full justify-start mt-2 hover:bg-gray-900 hover:text-white ${paths.includes('usefrs') && 'bg-black text-white'}`}>
@@ -112,7 +113,7 @@ export default function Dashboard() {
                     </div>
                 </div>
             </section>
-
+            <Toaster />
 
         </>
     );

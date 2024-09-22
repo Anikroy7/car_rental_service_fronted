@@ -1,20 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Loading from "../../components/ui/Loading";
 import { useDeleteCarMutation, useGetCarsQuery } from "../../redux/api/carApi";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 export default function AllCars() {
 
     const [details, setDetails] = useState('')
-    const { data, isLoading } = useGetCarsQuery(undefined);
-    const [deleteCar] = useDeleteCarMutation()
+    const { data, isLoading, error: getError } = useGetCarsQuery(undefined);
+    const [deleteCar, { isError: deleteError }] = useDeleteCarMutation()
 
-    if (isLoading) return <Loading />
-    const handleUserStatus = (status: string) => {
-        const isConfirmed = window.confirm(`Are you sure? User will be ${status}.`);
-        if (isConfirmed) {
-            // updateUser({ status: status })
+
+    useEffect(() => {
+        console.log('getError', getError)
+        if (getError || deleteError) {
+            let error = getError || deleteError;
+            console.log('error',error);
+            error?.data?.errorSources.map((e) => toast.error(e.message));
         }
-    }
+    }, [deleteError, getError])
+
     const handlelDelteCar = (id: string) => {
         const isConfirmed = window.confirm(`Are you sure? Car will be deleted.`);
         if (isConfirmed) {
@@ -30,6 +34,7 @@ export default function AllCars() {
         setDetails(details)
     };
     console.log(data);
+    if (isLoading) return <Loading />
 
     return (
         <>
@@ -51,7 +56,7 @@ export default function AllCars() {
                     </thead>
                     <tbody>
                         {
-                            data.length > 0 ? data?.map(({ name,
+                            data?.length > 0 ? data?.map(({ name,
                                 description,
                                 _id,
                                 color,
@@ -86,7 +91,7 @@ export default function AllCars() {
                                     <th>
                                         <div className="flex items-center gap-2">
 
-                                            <Link to={`/admin/dashboard/manage/cars/update/${_id}`}  className="btn btn-sm bg-gray-950 text-white">Update</Link>
+                                            <Link to={`/admin/dashboard/manage/cars/update/${_id}`} className="btn btn-sm bg-gray-950 text-white">Update</Link>
                                             <button onClick={() => handlelDelteCar(_id)} className="btn btn-sm btn-error text-white">Delete</button>
                                         </div>
                                     </th>

@@ -4,30 +4,36 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 export const userApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: `${import.meta.env.VITE_SERVER_BASE_URL}/api`,
-        prepareHeaders: (headers) => {
-            const userInfo = JSON.parse(localStorage.getItem('userInfo'))
-            // console.log('user token',token)
-            if (userInfo?.token) {
-                headers.set('Authorization', `Bearer ${userInfo.token}`);
-                headers.set('Content-Type', 'application/json');
-            }
-            return headers;
-        },
-
     }),
     tagTypes: ['users'],
     endpoints: (builder) => ({
         getAllUsers: builder.query({
-            query: () => '/users',
+            query: () => {
+                const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+                return {
+                    url: '/users',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${userInfo.token}`,
+                    },
+                }
+            },
             transformResponse: (response: { data },) => response.data,
             providesTags: ['users']
         }),
         updateAUser: builder.mutation({
-            query: (data) => ({
-                url: '/users/me',
-                body: data,
-                method: "PUT"
-            }),
+            query: (data) => {
+                const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+                return {
+                    url: '/users/me',
+                    body: data,
+                    method: "PUT",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${userInfo.token}`,
+                    },
+                }
+            },
             invalidatesTags: ['users']
         })
     })

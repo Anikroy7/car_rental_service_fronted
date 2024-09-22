@@ -4,9 +4,10 @@ import { AiOutlineClose } from "react-icons/ai";
 import { FaPlus } from "react-icons/fa";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { useCreateCarMutation, useGetSingleCarQuery } from "../../redux/api/carApi";
-import { useParams } from "react-router-dom";
+import { useGetSingleCarQuery, useUpdateCarMutation } from "../../redux/api/carApi";
+import { useNavigate, useParams } from "react-router-dom";
 import Loading from "../../components/ui/Loading";
+import { imageUpload } from "../../utils/imageUpload";
 
 const toolbarOptions = [
     [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
@@ -20,7 +21,7 @@ const toolbarOptions = [
 export default function UpdateCarForm() {
     const [feature, setFeature] = useState('')
     const imageTypeRegex = /image\/(png|jpg|jpeg)/gm;
-    const [createCar, { isLoading, data }] = useCreateCarMutation();
+    const [updateCar, { isLoading: updateCarLoading, data: updatedData, isSuccess: isUpdateSuccess }] = useUpdateCarMutation();
     const { id } = useParams();
     const { data: singleCar, isLoading: isGetSingleCarLoading } = useGetSingleCarQuery(id);
     const [allFeatures, setAllFeatures] = useState([]);
@@ -36,6 +37,7 @@ export default function UpdateCarForm() {
 
     const [imageFiles, setImageFiles] = useState([]);
     const [images, setImages] = useState([]);
+    const naviage = useNavigate()
 
     const changeHandler = (e) => {
         e.preventDefault()
@@ -90,10 +92,15 @@ export default function UpdateCarForm() {
     useEffect(() => {
         if (singleCar) {
             setAllFeatures([...singleCar?.data?.features]);
-            setImages([...singleCar.data.images])
+            setImages([...singleCar?.data?.images]);
         }
 
     }, [isGetSingleCarLoading])
+    useEffect(() => {
+        if (updatedData?.success) {
+            naviage('/admin/dashboard/manage/cars/all')
+        }
+    }, [isUpdateSuccess])
     const addToFeatures = (e) => {
         e.preventDefault();
         if (feature) {
@@ -110,38 +117,24 @@ export default function UpdateCarForm() {
     const removeFromFeatures = (item) => {
         setAllFeatures([...allFeatures.filter(f => f !== item)])
     }
-    const removeImage = (image, index) => {
-        const newImageFiles = imageFiles.filter((f, i) => i !== index)
-        setImageFiles([...newImageFiles])
-        // console.log(newImageFiles)
-        setImages([...images.filter(i => i !== image)])
-    }
-    const onSubmit = (data) => {
-        console.log(data)
-        console.log({ ...data, features: allFeatures, images: imageFiles.length?imageFiles:singleCar.data.images, pricePerHour: parseInt(data.pricePerHour), isElectric: data.isElectric === 'yes' })
-        // const carData = { ...data, features: allFeatures, images: imageFiles, pricePerHour: parseInt(data.pricePerHour), isElectric: data.isElectric === 'yes' };
-        // const formData = new FormData();
 
-        // Object.entries(carData).forEach(([key, value]) => {
-        //     if (key !== "images" && key !== 'features') {
-        //         formData.append(
-        //             key,
-        //             typeof value !== "number" ? value.toString() : value
-        //         );
-        //     }
-        //     if (key === "features") {
-        //         formData.append(key, JSON.stringify(value));
-        //     }
-        // });
+    const onSubmit = async (data) => {
 
-        // Array.from(carData.images).forEach((file) => {
-        //     formData.append("images", file as any);
-        // });
-        // createCar(formData);
+
+        const updateCarData = { ...data, features: allFeatures, pricePerHour: parseInt(data.pricePerHour), isElectric: data.isElectric === 'yes' };
+        if (imageFiles.length > 0) {
+            const imagesArray = await imageUpload(imageFiles);
+            updateCarData.images = imagesArray;
+        } else {
+            delete updateCarData.images
+        }
+        // console.log(updateCarData)
+
+        updateCar({ updateCarData, id });
     }
     if (isGetSingleCarLoading) return <Loading />
 
-    // console.log(singleCar)
+    // console.log(images)
     return (
         <div className="bg-gray-100 mx-auto  py-20 px-12 lg:px-24 shadow-xl mb-24">
             <form onSubmit={handleSubmit(onSubmit)} className="w-full">
@@ -199,12 +192,28 @@ export default function UpdateCarForm() {
                         {/* Is Electric Field */}
                         <div className="md:w-1/2 px-3 mb-6 md:mb-0">
                             <label className="uppercase tracking-wide text-black text-xs font-bold mb-2" htmlFor="isElectric">
+                                Status
+                            </label>
+                            <div>
+                                <select
+                                    {...register('status')}
+                                    defaultValue={singleCar.data.status}
+                                    className="w-full bg-gray-200 border border-gray-200 text-black text-xs py-3 px-4 pr-8 mb-3 rounded"
+                                    id="status"
+                                >
+                                    <option value="available">Available</option>
+                                    <option value="unavailable">Unavailable</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+                            <label className="uppercase tracking-wide text-black text-xs font-bold mb-2" htmlFor="isElectric">
                                 Is Electric
                             </label>
                             <div>
                                 <select
                                     {...register('isElectric')}
-                                    defaultValue={singleCar.data.isElectric ? "yes": 'no'}
+                                    defaultValue={singleCar.data.isElectric ? "yes" : 'no'}
                                     className="w-full bg-gray-200 border border-gray-200 text-black text-xs py-3 px-4 pr-8 mb-3 rounded"
                                     id="isElectric"
                                 >
@@ -306,7 +315,7 @@ export default function UpdateCarForm() {
                         <Controller
                             name="images"
                             control={control}
-                            // rules={{ required: imageFiles.length === 0 ? "At least one image should be added." : false }}
+                            rules={{ required: images.length === 0 ? "At least one image should be added." : false }}
                             render={(field) => (
                                 <input
                                     {...field}
@@ -320,13 +329,13 @@ export default function UpdateCarForm() {
                                 />
                             )}
                         />
-                        {/* <div className="text-red-500">
+                        <div className="text-red-500">
                             <div className="text-red-500">
                                 {errors.images && (
                                     <span>{errors.images.message}</span>
                                 )}
                             </div>
-                        </div> */}
+                        </div>
                     </p>
 
                     {/* Display the count of files dynamically */}
@@ -346,10 +355,6 @@ export default function UpdateCarForm() {
                                             </div>
                                         </div>
 
-                                        {/* Cross button - hidden initially, visible on hover */}
-                                        <button type="button" onClick={() => removeImage(image, index)} className="absolute top-1 right-1 text-white bg-gray-800 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <AiOutlineClose className="w-5 h-5" />
-                                        </button>
                                     </div>
                                 })
                             }
@@ -357,7 +362,7 @@ export default function UpdateCarForm() {
                     }
                     <div className="-mx-3 md:flex mt-2">
                         <div className="px-3 w-full text-center">
-                            <input value={isLoading ? 'Loading...' : 'Update'} type="submit" className=" w-[8rem] bg-gray-900 text-white font-bold py-2 px-4 border-gray-500 hover:border-gray-100 rounded-full cursor-pointer" />
+                            <input value={isGetSingleCarLoading || updateCarLoading ? 'Loading...' : 'Update'} type="submit" className=" w-[8rem] bg-gray-900 text-white font-bold py-2 px-4 border-gray-500 hover:border-gray-100 rounded-full cursor-pointer" />
 
                         </div>
                     </div>

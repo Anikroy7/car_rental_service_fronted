@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { logout } from "../../redux/features/auth/authSlice";
+import { FaShoppingCart } from "react-icons/fa";
 
 export default function Header() {
   const user = useAppSelector(state => state.auth);
@@ -14,14 +15,22 @@ export default function Header() {
       <Link to={'/'}>Home</Link>
     </li>
 
+
     <li>
       <Link to={'/about'}>About us</Link>
     </li>
     <li>
-      <Link to={'/All Cars'}>All Cars</Link>
+      <Link to={'/all-cars'}>All Cars</Link>
     </li>
     <li>
       <Link to={'/admin/dashboard'}>Dashboad</Link>
+    </li>
+    <li>
+      <Link to={'/book/:id'} className="flex items-center">
+        <FaShoppingCart  />
+        Cart
+        <div className="badge badge-white ml-2">0</div>
+      </Link>
     </li>
   </>
   return (

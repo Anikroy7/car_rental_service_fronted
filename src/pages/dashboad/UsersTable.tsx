@@ -1,12 +1,22 @@
+import { useEffect } from "react";
 import Loading from "../../components/ui/Loading";
 import { useGetAllUsersQuery, useUpdateAUserMutation } from "../../redux/api/userApi"
+import toast from "react-hot-toast";
 
 export default function UsersTable() {
 
-    const { data , isLoading } = useGetAllUsersQuery(undefined);
+    const { data , isLoading, error:getError } = useGetAllUsersQuery(undefined);
     const [updateUser, { data: updateData, error: updateError }] = useUpdateAUserMutation()
-    if (isLoading) return <Loading />
+ 
 
+    useEffect(() => {
+        console.log('getError', getError)
+        if (getError || updateError) {
+            let error = getError || updateError;
+            // console.log('error',error);
+            error.data.errorSources.map((e) => toast.error(e.message));
+        }
+    }, [updateError, getError])
     const handleUserStatus = (status: string) => {
         const isConfirmed = window.confirm(`Are you sure? User will be ${status}.`);
         if (isConfirmed) {  
@@ -25,8 +35,8 @@ export default function UsersTable() {
             updateUser({ role:'admin' })
         }
     }
-
-    console.log(updateData, updateError);
+    if (isLoading) return <Loading />
+console.log(data?.length)
 
     return (
         <>
@@ -45,7 +55,7 @@ export default function UsersTable() {
                     </thead>
                     <tbody>
                         {
-                           data.length>0? data?.map(({ name, email, address, phone, role, status }) => <tr>
+                           data?.length>0? data?.map(({ name, email, address, phone, role, status }) => <tr>
                            <td>
                                <div className="flex items-center gap-3">
                                    <div className="avatar">

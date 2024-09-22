@@ -5,6 +5,8 @@ import { FaPlus } from "react-icons/fa";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useCreateCarMutation } from "../../redux/api/carApi";
+import { imageUpload } from "../../utils/imageUpload";
+import { useNavigate } from "react-router-dom";
 
 const toolbarOptions = [
     [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
@@ -19,7 +21,9 @@ export default function AddCarForm() {
     const [feature, setFeature] = useState('')
     const [allFeatures, setAllFeatures] = useState([]);
     const imageTypeRegex = /image\/(png|jpg|jpeg)/gm;
-    const [createCar, { isLoading, data }] = useCreateCarMutation()
+    let [createCar, { isLoading, data, isSuccess }] = useCreateCarMutation();
+    const [disable, setDisable] = useState(false)
+    const navigate = useNavigate()
     const {
         register,
         handleSubmit,
@@ -102,6 +106,11 @@ export default function AddCarForm() {
             alert('Please enter a feature');
         }
     };
+    useEffect(() => {
+        if (data?.success) {
+            navigate('/admin/dashboard/manage/cars/all')
+        }
+    }, [isSuccess])
     const removeFromFeatures = (item) => {
         setAllFeatures([...allFeatures.filter(f => f !== item)])
     }
@@ -111,31 +120,17 @@ export default function AddCarForm() {
         // console.log(newImageFiles)
         setImages([...images.filter(i => i !== image)])
     }
-    const onSubmit = (data) => {
-        // console.log(data)
-        console.log({ ...data, features: allFeatures, images: imageFiles, pricePerHour: parseInt(data.pricePerHour), isElectric: data.isElectric === 'yes' })
-        const carData = { ...data, features: allFeatures, images: imageFiles, pricePerHour: parseInt(data.pricePerHour), isElectric: data.isElectric === 'yes' };
-        const formData = new FormData();
+    const onSubmit = async (data) => {
+        setDisable(true)
+        if (imageFiles?.length) {
+            const imagesArray = await imageUpload(imageFiles);
+            const carData = { ...data, features: allFeatures, images: imagesArray, pricePerHour: parseInt(data.pricePerHour), isElectric: data.isElectric === 'yes' };
+            createCar(carData)
+        }
+        setDisable(false)
 
-        Object.entries(carData).forEach(([key, value]) => {
-            if (key !== "images" && key !== 'features') {
-                formData.append(
-                    key,
-                    typeof value !== "number" ? value.toString() : value
-                );
-            }
-            if (key === "features") {
-                formData.append(key, JSON.stringify(value));
-            }
-        });
-
-        Array.from(carData.images).forEach((file) => {
-            formData.append("images", file as any);
-        });
-        createCar(formData);
     }
 
-    // console.log(data)
     return (
         <div className="bg-gray-100 mx-auto  py-20 px-12 lg:px-24 shadow-xl mb-24">
             <form onSubmit={handleSubmit(onSubmit)} className="w-full">
@@ -274,7 +269,7 @@ export default function AddCarForm() {
                     </div>
                     <div className="mb-3">
                         {
-                            allFeatures?.map(f => <div className="badge  gap-2 mr-3 p-3">
+                            allFeatures?.map(f => <div key={f} className="badge  gap-2 mr-3 p-3">
                                 <svg
                                     onClick={() => removeFromFeatures(f)}
                                     xmlns="http://www.w3.org/2000/svg"
@@ -349,7 +344,7 @@ export default function AddCarForm() {
                     }
                     <div className="-mx-3 md:flex mt-2">
                         <div className="px-3 w-full text-center">
-                            <input value={isLoading ? 'Loading...' : 'ADD'} type="submit" className=" w-[8rem] bg-gray-900 text-white font-bold py-2 px-4 border-gray-500 hover:border-gray-100 rounded-full cursor-pointer" />
+                            <input disabled={disable} value={isLoading ? 'Loading...' : 'ADD'} type="submit" className=" w-[8rem] bg-gray-900 text-white font-bold py-2 px-4 border-gray-500 hover:border-gray-100 rounded-full cursor-pointer" />
 
                         </div>
                     </div>
