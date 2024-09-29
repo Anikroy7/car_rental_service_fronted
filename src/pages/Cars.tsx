@@ -1,5 +1,5 @@
 import '../assets/css/Cars.css'
-import { FaHeart, FaStar, FaRegStar, FaCar, FaBook } from 'react-icons/fa'
+import { FaHeart, FaStar, FaRegStar, FaCar, FaBook, FaEye } from 'react-icons/fa'
 import { useGetCarsQuery } from '../redux/api/carApi'
 import Loading from '../components/ui/Loading'
 import { Link } from 'react-router-dom'
@@ -60,10 +60,16 @@ export default function Cars() {
                                 </div>
 
                                 {/* Add to Cart Button */}
-                                <Link to={`/book/${_id}`} className="mt-4 bg-black text-white font-bold py-1 px-4 rounded hover:bg-gray-700 transition duration-300 flex items-center justify-center">
-                                    <FaBook className="mr-2" />
-                                    Book Now
-                                </Link>
+                                <div className='flex gap-2'>
+                                    <Link to={`/book/${_id}`} className="mt-4 bg-black text-white font-bold py-1 px-4 rounded hover:bg-gray-700 transition duration-300 flex items-center justify-center">
+                                        <FaBook className="mr-2" />
+                                        Book Now
+                                    </Link>
+                                    <Link to={`/cars/${_id}`} className="mt-4 bg-black text-white font-bold py-1 px-4 rounded hover:bg-gray-700 transition duration-300 flex items-center justify-center">
+                                        <FaEye className="mr-2" />
+                                        See Details
+                                    </Link>
+                                </div>
                             </div>
                         </div>
 

@@ -5,13 +5,15 @@ type InitialState = {
   email: string;
   role: string;
   token: string;
+  userId: string;
 };
 
 const initialState: InitialState = {
   // username: "",
   email: "",
   role: "",
-  token:''
+  token: '',
+  userId: ''
 };
 
 const authSlice = createSlice({
@@ -22,13 +24,15 @@ const authSlice = createSlice({
       const user = action.payload;
       state.email = user.email;
       state.role = user.role;
-      state.token= user.token
+      state.token= user.token;
+      state.userId= user.userId;
     },
 
     logout: (state, action) => {
       state.email = '';
       state.role = ''
       state.token= ''
+      state.userId= ''
     }
   },
 });

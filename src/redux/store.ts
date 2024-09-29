@@ -3,17 +3,18 @@ import authReducer from "./features/auth/authSlice";
 import { authApi } from "./api/authApi";
 import { carApi } from "./api/carApi";
 import { userApi } from "./api/userApi";
-
+import { bookingApi } from "./api/bookingApi";
 
 const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
     [carApi.reducerPath]: carApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
+    [bookingApi.reducerPath]: bookingApi.reducer,
     auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware, carApi.middleware, userApi.middleware),
+    getDefaultMiddleware().concat(authApi.middleware, carApi.middleware, userApi.middleware, bookingApi.middleware),
 });
 
 // Get the type of our store variable

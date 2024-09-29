@@ -56,14 +56,9 @@ export const carApi = createApi({
 
     deleteCar: builder.mutation({
       query: (id) => {
-        const userInfo = JSON.parse(localStorage.getItem('userInfo'))
         return {
           url: `/cars/${id}`,
           method: "DELETE",
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${userInfo}`,
-          },
         }
       },
       invalidatesTags: ["cars"],

@@ -55,7 +55,7 @@ export default function AddCarForm() {
 
         }
         if (validImageFiles.length) {
-            setImageFiles(validImageFiles);
+            setImageFiles([...imageFiles, ...validImageFiles]);
             return;
         }
         alert("Selected images are not of valid type!");
@@ -183,8 +183,68 @@ export default function AddCarForm() {
 
                         </div>
                     </div>
+                    <div className="my-3">
+                        <label className="uppercase tracking-wide text-black text-xs font-bold mb-2" htmlFor="location">
+                            Insurance Policy
+                        </label>
+                        <Controller
+                            name="insurancePolicy"
+                            control={control}
+                            defaultValue=""
+                            rules={{ required: 'Insurance is required. If you have no insurance policy then simply write no.' }}  // Validation rule
+                            render={({ field }) => (
+                                <ReactQuill
+                                    {...field}
+                                    theme="snow"
+                                    modules={{ toolbar: toolbarOptions }}
+                                />
+                            )}
+                        />
+                        {/* <div style={{ marginTop: '20px' }}>
+                            <strong>Output:</strong>
+                            <div dangerouslySetInnerHTML={{ __html: value }} />
+                        </div> */}
+                        <div className="text-red-500">
+                            {errors.insurancePolicy && (
+                                <div className="text-red-500">
+                                    <span>{errors.insurancePolicy.message}</span>
+                                </div>
+                            )}
+
+                        </div>
+                    </div>
+                    <div className="my-3">
+                        <label className="uppercase tracking-wide text-black text-xs font-bold mb-2" htmlFor="location">
+                            Cancellation Policy
+                        </label>
+                        <Controller
+                            name="cancellationPolicy"
+                            control={control}
+                            defaultValue=""
+                            rules={{ required: 'Cancellation Policy is required. If you have no cancellation policy then simply write no.' }}  // Validation rule
+                            render={({ field }) => (
+                                <ReactQuill
+                                    {...field}
+                                    theme="snow"
+                                    modules={{ toolbar: toolbarOptions }}
+                                />
+                            )}
+                        />
+                        {/* <div style={{ marginTop: '20px' }}>
+                            <strong>Output:</strong>
+                            <div dangerouslySetInnerHTML={{ __html: value }} />
+                        </div> */}
+                        <div className="text-red-500">
+                            {errors.cancellationPolicy && (
+                                <div className="text-red-500">
+                                    <span>{errors.cancellationPolicy.message}</span>
+                                </div>
+                            )}
+
+                        </div>
+                    </div>
                     <div className="-mx-3 md:flex mb-2">
-                        {/* Is Electric Field */}
+                  
                         <div className="md:w-1/2 px-3 mb-6 md:mb-0">
                             <label className="uppercase tracking-wide text-black text-xs font-bold mb-2" htmlFor="isElectric">
                                 Is Electric

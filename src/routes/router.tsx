@@ -17,6 +17,7 @@ import CarDetails from "../pages/CarDetails";
 import AddCarForm from "../pages/dashboad/AddCarForm";
 import { AllCarsPage } from "../pages/AllCarsPage";
 import Book from "../pages/Book";
+import BookingCalender from "../pages/BookingCalender";
 
 const router = createBrowserRouter([
   {
@@ -36,8 +37,12 @@ const router = createBrowserRouter([
     element: <AboutUsPage />,
   },
   {
+    path: "/calender",
+    element: <BookingCalender />,
+  },
+  {
     path: "/book/:id",
-    element: <Book />,
+    element: <PrivateRoute><Book /></PrivateRoute>,
   },
   {
     path: "/termsAndConditions",

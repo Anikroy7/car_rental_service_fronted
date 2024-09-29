@@ -2,9 +2,22 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const authApi = createApi({
   reducerPath: "authApi",
-  baseQuery: fetchBaseQuery({ baseUrl: `${import.meta.env.VITE_SERVER_BASE_URL}/api` }),  
+  baseQuery: fetchBaseQuery({
+    baseUrl: `${import.meta.env.VITE_SERVER_BASE_URL}/api`,
+    credentials: "same-origin",
+    prepareHeaders: (headers) => {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      if (userInfo?.token) {
+        // console.log('user token',token)
+        headers.set('Authorization', `Bearer ${userInfo.token}`);
+        headers.set('Content-Type', 'application/json');
+      }
+      return headers;
+    },
+  }),
+
   endpoints: (builder) => ({
-    
+
     createUser: builder.mutation({
       query: (data) => {
         return {
@@ -15,6 +28,7 @@ export const authApi = createApi({
       },
       //   invalidatesTags: ["auth"],
     }),
+
     loginUser: builder.mutation({
       query: (data) => {
         return {
@@ -38,13 +52,13 @@ export const authApi = createApi({
     }),
     resetPassword: builder.mutation({
       query: (data) => {
-          return {
+        return {
           url: "/auth/reset-password",
           method: "POST",
           body: data.bodyData,
-          headers: {
-             Authorization: `Bearer ${data.token}`
-          }
+          // headers: {
+          //   Authorization: `Bearer ${data.token}`
+          // }
         };
       },
       //   invalidatesTags: ["auth"],

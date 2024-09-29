@@ -45,7 +45,9 @@ export default function AllCars() {
                         <tr>
                             <th>Images</th>
                             <th>Name</th>
-                            <th>description</th>
+                            <th>description</th> 
+                            <th>CancellationPolicy</th> 
+                            <th>InsurancePolicy</th> 
                             <th>color</th>
                             <th>features</th>
                             <th>isElectric</th>
@@ -65,6 +67,8 @@ export default function AllCars() {
                                 features,
                                 images,
                                 pricePerHour,
+                                cancellationPolicy,
+                                insurancePolicy
                             }) => <tr key={_id}>
                                     <th>
                                         <img width={50} src={`${images[0]}`} alt="" />
@@ -74,6 +78,12 @@ export default function AllCars() {
                                     </td>
                                     <td>
                                         <button onClick={(e) => handleOpenModal(e, description)} className="btn btn-sm">See</button>
+                                    </td>
+                                    <td>
+                                        <button onClick={(e) => handleOpenModal(e, cancellationPolicy)} className="btn btn-sm">See</button>
+                                    </td>
+                                    <td>
+                                        <button onClick={(e) => handleOpenModal(e, insurancePolicy)} className="btn btn-sm">See</button>
                                     </td>
                                     <td>{color}</td>
                                     <td >

@@ -39,8 +39,8 @@ export default function Login() {
       const userInfo = {
         email: data.data.email,
         role: data.data.role,
-        token: data.token
-
+        token: data.token,
+        userId: data.data._id
       };
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
       if (searchParams.get('redirect_url')) {
