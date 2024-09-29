@@ -2,7 +2,6 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import Login from "../pages/auth/Login";
 import TermsAndConditions from "../pages/TermsAndConditions";
-import AboutUsPage from "../pages/AboutUsPage";
 import Signup from "../pages/auth/Signup";
 import ForgetPassword from "../pages/ForgetPassword";
 import ResetPassword from "../pages/ResetPassword";
@@ -18,6 +17,7 @@ import AddCarForm from "../pages/dashboad/AddCarForm";
 import { AllCarsPage } from "../pages/AllCarsPage";
 import Book from "../pages/Book";
 import BookingCalender from "../pages/BookingCalender";
+import AboutUs from "../pages/AboutUs";
 
 const router = createBrowserRouter([
   {
@@ -34,7 +34,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/about",
-    element: <AboutUsPage />,
+    element: <AboutUs />,
   },
   {
     path: "/calender",

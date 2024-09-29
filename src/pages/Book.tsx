@@ -52,7 +52,7 @@ export default function Book() {
     if (isLoading || carLoading) return <Loading />
     // console.log(user[0])
     let { name, phone, address } = user.data;
-    const { name: carName, images, color, pricePerHour, isElectric, features } = car.data;
+    const { name: carName, images, color, pricePerHour, isElectric, features , cancellationPolicy, insurancePolicy} = car.data;
     const seconds = [];
     for (let index = 1; index <= 11; index++) {
         seconds.push(index)
@@ -128,7 +128,7 @@ export default function Book() {
                                 </div>
                             </div>
                         </div>
-                        <InsuranceOptions />
+                        <InsuranceOptions cancellationPolicy={cancellationPolicy} insurancePolicy={insurancePolicy}/>
                         <div className="md:flex items-stretch py-8 md:py-10 lg:py-8 border-t border-gray-50 shadow-md p-3">
                             <div className="md:w-4/12 lg:w-1/2 w-full">
                                 <img src={images[0]} alt="Black Leather Bag" className="h-full object-center object-cover hidden md:block" />
@@ -166,8 +166,8 @@ export default function Book() {
                                 <div>
                                     <p className="lg:text-4xl text-3xl font-black leading-9 text-black">
                                         <div className="flex items-center pb-6 justify-between lg:pt-5 pt-20">
-                                            <p className="text-2xl leading-normal text-black">Total</p>
-                                            <p className="text-2xl font-bold leading-normal text-right text-black">$1,240</p>
+                                            <p className="text-2xl leading-normal text-black">Price</p>
+                                            <p className="text-2xl font-bold leading-normal text-right text-black">${pricePerHour}/h</p>
                                         </div>
                                     </p>
                                     <label htmlFor="slot" className='text-black font-bold'>Selected Date</label>
