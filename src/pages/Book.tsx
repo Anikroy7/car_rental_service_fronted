@@ -32,8 +32,8 @@ export default function Book() {
     const { email, userId } = useAppSelector(state => state.auth);
     const { data: user, isLoading, isError, error } = useGetAUserQuery(undefined);
     const { data: car, isLoading: carLoading, error: carError } = useGetSingleCarQuery(id);
-    const [startHour, setStartHour] = useState<string>('12');
-    const [timeZone, setTimeZone] = useState<string>('AM');
+    const [startHour, setStartHour] = useState<string>('1');
+    const [timeZone, setTimeZone] = useState<string>('PM');
     // const [createBooking, { isLoading:   , isError: createBookingError, error: createBookingErrorRes, data: createBookingData }] = useCreateBookingMutation();
     // const navigate = useNavigate();
     const [value, onChange] = useState<Value>(new Date());

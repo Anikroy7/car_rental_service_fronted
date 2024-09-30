@@ -3,15 +3,24 @@ import Loading from "../../components/ui/Loading";
 import { useDeleteCarMutation, useGetCarsQuery } from "../../redux/api/carApi";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useGetAllBookingsQuery, useGetMyBookingsQuery, useUpdateBookingMutation } from "../../redux/api/bookingApi";
+import { useCreateBookingPaymentMutation, useGetAllBookingsQuery, useGetMyBookingsQuery, useUpdateBookingMutation } from "../../redux/api/bookingApi";
+import { useAppSelector } from "../../redux/hook";
 export default function MyBookings() {
 
     const [details, setDetails] = useState({})
     const { data, isLoading, error: getError } = useGetMyBookingsQuery(undefined);
-    const [updateBooking, { data: updatedData }] = useUpdateBookingMutation()
+    const [updateBooking, { data: updatedData }] = useUpdateBookingMutation();
+    const [createPayment, { data: paymentData, error: paymentError, isSuccess }] = useCreateBookingPaymentMutation()
+    const { userId } = useAppSelector(state => state.auth)
 
 
-
+    useEffect(() => {
+        if (paymentData) {
+            window.location.href = paymentData.data; // Redirect to the payment URL
+        } else {
+            toast.error('Payment failed. Please try again.', { id: 'payment' });
+        }
+    }, [isSuccess])
     const handleOpenModal = (event, details) => {
         event.stopPropagation();
         event.preventDefault(); // Prevent default action if any
@@ -31,6 +40,17 @@ export default function MyBookings() {
             toast.success(`Change status to ${e.target.value}`,)
         }
     }
+
+    const handlePay = (item) => {
+        const paydata = {
+            user: userId,
+            car: item.car._id,
+            booking: item._id,
+
+        }
+        createPayment(paydata)
+    }
+    console.log('paymentData', paymentData, paymentError)
     return (
         <>
             <div className="overflow-x-auto">
@@ -49,7 +69,7 @@ export default function MyBookings() {
                     <tbody>
                         {
                             data?.length > 0 ? data?.map((item, index) => {
-                                const { user, _id, car, date, status
+                                const { user, _id, car, date, status, isReturned,paymentStatus
                                 } = item
                                 return <tr key={_id}>
                                     <th>
@@ -77,6 +97,10 @@ export default function MyBookings() {
                                         {
                                             status === 'pending' && <button onClick={(e) => handleCancel(_id)} className="ms-2 btn btn-sm bg-error">Cancel</button>
                                         }
+                                        {
+                                            isReturned ? paymentStatus==='Paid'?<button className="ml-3 btn btn-sm btn-error text-white">{paymentStatus}</button>:<button onClick={() => handlePay(item)} className="ml-3 btn btn-sm btn-success text-white">Pay</button> :''
+                                        }
+
 
                                     </th>
 

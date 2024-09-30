@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Loading from "../../components/ui/Loading";
-import { useDeleteCarMutation, useGetCarsQuery } from "../../redux/api/carApi";
-import { Link } from "react-router-dom";
+import { useDeleteCarMutation, useGetCarsQuery, useReturnCarMutation } from "../../redux/api/carApi";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useGetAllBookingsQuery, useUpdateBookingMutation } from "../../redux/api/bookingApi";
 export default function AllBookins() {
@@ -99,22 +99,37 @@ export default function AllBookins() {
                 </table>
             </div>
             <BookingDetailsModal data={details} />
-            <ReturnCarModal bookingId={bookingId}/>
+            <ReturnCarModal bookingId={bookingId} />
         </>
     )
 }
-const ReturnCarModal = ({bookingId}) => {
-    const[startHour, setStartHour] = useState<string>('12');
-    const [timeZone, setTimeZone] = useState<string>('AM');
+const ReturnCarModal = ({ bookingId }) => {
+    const [startHour, setStartHour] = useState<string>('1');
+    const [timeZone, setTimeZone] = useState<string>('PM');
     const endTime = `${timeZone === "AM" ? startHour : parseInt(startHour) + 12}:00`;
+    const [returnCar, { isLoading, isSuccess, data, error, isError }] = useReturnCarMutation()
     const seconds = [];
+    const navigate = useNavigate()
     for (let index = 1; index <= 11; index++) {
         seconds.push(index)
     }
+
+    useEffect(() => {
+        if (error) {
+            console.log(error);
+            error.data.errorSources.map((e) => toast.error(e.message));
+        }
+        if (isSuccess) {
+            navigate("/admin/dashboard/manage/bookings/all");
+        }
+    }, [isError, isSuccess]);
     console.log('endTime', endTime)
-    const handelReturn =()=>{
-        
+    const handelReturn = () => {
+        toast.success('Car returned successfull')
+        document.getElementById('return_car_modal').style.display = 'none'; // Hides the modal
+        returnCar({ bookingId, endTime })
     }
+    console.log('reutrn ', isLoading, isSuccess, data)
     return <>
 
         <dialog id="return_car_modal" className="modal" style={{ width: "100%" }}>
@@ -123,7 +138,7 @@ const ReturnCarModal = ({bookingId}) => {
                     {/* if there is a button in form, it will close the modal */}
                     <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                 </form>
-                    <h3 className="text-xl font-bold">End Time</h3>
+                <h3 className="text-xl font-bold">End Time</h3>
                 <div className="mt-3 bg-gray-100 p-10">
                     <div className="inline-flex text-lg border rounded-md shadow-lg p-2">
                         <select value={startHour} onChange={(e) => setStartHour(e.target.value)} name="startHour" id="" className="px-2 outline-none appearance-none bg-transparent">
@@ -144,7 +159,9 @@ const ReturnCarModal = ({bookingId}) => {
                         </select>
                     </div>
                 </div>
-                <button onClick={handelReturn}>Return</button>
+                <div className="text-right py-3">
+                    <button className="btn btn-success btn-sm text-white" onClick={handelReturn}>Return</button>
+                </div>
             </div>
         </dialog>
 

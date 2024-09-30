@@ -44,6 +44,7 @@ export default function BookingConfirmation() {
                 cardNo: paymentDetails.cardNo,
             },
         };
+        
         createBooking(bookingData);
     }
     // console.log('createBookingData', createBookingData)
