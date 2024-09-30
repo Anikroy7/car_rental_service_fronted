@@ -1,14 +1,16 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { logout } from "../../redux/features/auth/authSlice";
 
 
 export default function Header() {
   const user = useAppSelector(state => state.auth);
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate()
   const handleLogout = () => {
     dispatch(logout({}));
-    localStorage.removeItem('userInfo')
+    localStorage.removeItem('userInfo');
+    navigate('/login')
   }
   const navItems = <>
     <li>

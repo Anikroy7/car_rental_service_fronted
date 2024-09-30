@@ -30,17 +30,36 @@ export const bookingApi = createApi({
             },
             invalidatesTags: ["bookings"],
         }),
+        updateBooking: builder.mutation({
+            query: ({ updateBookingData, id }) => {
+                return {
+                    url: `/bookings/${id}`,
+                    method: "PUT",
+                    body: updateBookingData,
+
+                };
+            },
+            invalidatesTags: ["bookings"],
+        }),
+
         getMyBookings: builder.query({
             query: () => 'bookings/my-bookings',
             transformResponse: (response: { data },) => response.data,
             providesTags: ['bookings']
         }),
+        getAllBookings: builder.query({
+            query: () => 'bookings',
+            transformResponse: (response: { data },) => response.data,
+            providesTags: ['bookings']
+        }),
+    
 
     }),
 });
 
 export const {
-
+    useUpdateBookingMutation,
     useCreateBookingMutation,
-    useGetMyBookingsQuery
+    useGetMyBookingsQuery,
+    useGetAllBookingsQuery
 } = bookingApi;

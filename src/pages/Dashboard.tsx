@@ -1,10 +1,17 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 import "../assets/css/Dashboard.css";
 import { Toaster } from "react-hot-toast";
+import { useAppDispatch } from "../redux/hook";
+import { logout } from "../redux/features/auth/authSlice";
 
 export default function Dashboard() {
   const location = useLocation();
   const paths = location.pathname.split("/");
+  const dispatch = useAppDispatch()
+  const handleLogout = () => {
+    dispatch(logout({}));
+    localStorage.removeItem('userInfo')
+  }
 
   return (
     <>

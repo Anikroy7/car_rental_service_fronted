@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./features/auth/authSlice";
+import bookingReducer from "./features/booking/bookingSlice";
 import { authApi } from "./api/authApi";
 import { carApi } from "./api/carApi";
 import { userApi } from "./api/userApi";
@@ -12,6 +13,7 @@ const store = configureStore({
     [userApi.reducerPath]: userApi.reducer,
     [bookingApi.reducerPath]: bookingApi.reducer,
     auth: authReducer,
+    booking: bookingReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(authApi.middleware, carApi.middleware, userApi.middleware, bookingApi.middleware),

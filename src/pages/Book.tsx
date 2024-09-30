@@ -4,7 +4,7 @@ import MainLayout from '../components/layouts/MainLayout'
 import { useForm } from 'react-hook-form';
 import { useGetSlots } from '../hooks/useGetSlots';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useAppSelector } from '../redux/hook';
+import { useAppDispatch, useAppSelector } from '../redux/hook';
 import { useGetAllUsersQuery, useGetAUserQuery } from '../redux/api/userApi';
 import { CgLayoutGrid } from 'react-icons/cg';
 import Loading from '../components/ui/Loading';
@@ -15,6 +15,7 @@ import { useGetSingleCarQuery } from '../redux/api/carApi';
 import { getHours } from 'date-fns';
 import InsuranceOptions from './InsuranceOptions';
 import { useCreateBookingMutation } from '../redux/api/bookingApi';
+import { setBooking } from '../redux/features/booking/bookingSlice';
 
 
 type FormInputs = {
@@ -22,6 +23,7 @@ type FormInputs = {
     email: string;
     phone: string;
     address: string;
+    cardHolderName: string
 };
 
 export default function Book() {
@@ -32,9 +34,11 @@ export default function Book() {
     const { data: car, isLoading: carLoading, error: carError } = useGetSingleCarQuery(id);
     const [startHour, setStartHour] = useState<string>('12');
     const [timeZone, setTimeZone] = useState<string>('AM');
-    const [createBooking, { isLoading: createBookingLoading, isError: createBookingError, error: createBookingErrorRes, data: createBookingData }] = useCreateBookingMutation();
+    // const [createBooking, { isLoading:   , isError: createBookingError, error: createBookingErrorRes, data: createBookingData }] = useCreateBookingMutation();
     // const navigate = useNavigate();
     const [value, onChange] = useState<Value>(new Date());
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch()
     // useEffect(() => {
     //     console.log(error)
     //     if (!user) {
@@ -51,8 +55,8 @@ export default function Book() {
     } = useForm<FormInputs>();
     if (isLoading || carLoading) return <Loading />
     // console.log(user[0])
-    let { name, phone, address } = user.data;
-    const { name: carName, images, color, pricePerHour, isElectric, features , cancellationPolicy, insurancePolicy} = car.data;
+    let { name, phone, address } = user?.data;
+    const { name: carName, images, color, pricePerHour, isElectric, features, cancellationPolicy, insurancePolicy, _id } = car.data;
     const seconds = [];
     for (let index = 1; index <= 11; index++) {
         seconds.push(index)
@@ -61,23 +65,120 @@ export default function Book() {
     const fullDate = `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()}`;
 
     const onSubmit = (data: FormInputs) => {
+        console.log(data)
         const startTime = `${timeZone === "AM" ? startHour : parseInt(startHour) + 12}:00`;
-        console.log(fullDate, startTime)
-        createBooking({
+        const bookingObj = {
+            paymentDetails: {
+                cardHolderName: data.cardHolderName,
+                cardNo: data.cardNo
+            },
+            personalDetails: {
+                nidOrPassport: data.nidPassport,
+                drivingLicense: data.drivingLicense,
+                additionalOptions: [data.gps === 'yes' ? 'GPS' : '', data.childSeat === 'yes' ? "Child Seat" : '',]
+            },
+            date: fullDate,
             startTime,
-            date:fullDate,
-            carId: id,
-        });
+            endTime: '',
+            totalCost: ''
+
+        }
+        dispatch(setBooking({...bookingObj}))
+ 
+        navigate(`/book/confirm/${_id}`)
     }
 
-    console.log('createBookingErrorRes', createBookingData)
     return (
         <MainLayout>
-
+            <section className="w-full inline-block h-auto p-10 bg-gray-200">
+                <div id="advanced_filters" className="mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div className="bg-white shadow-md block">
+                        <div className="w-full p-2 flex hover:bg-blue-500 hover:text-white cursor-pointer relative">
+                            <p className="font-bold leading-5 w-11/12 text-md">Filtra per:</p>
+                            <svg className="fill-current w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path fill-rule="evenodd" d="M 11 2 L 11 11 L 2 11 L 2 13 L 11 13 L 11 22 L 13 22 L 13 13 L 22 13 L 22 11 L 13 11 L 13 2 Z" />
+                            </svg>
+                        </div>
+                        <div className="p-2 w-full relative inline-block">
+                            <button className="p-1 px-4 m-0.5 hover:text-blue-800 hover:border-blue-500 text-sm font-bold border-2 text-gray-600 border-gray-300 bg-white rounded-lg">
+                                <span className="w-full flex align-middle">Circolare</span>
+                            </button>
+                            <button className="p-1 px-2 m-0.5 text-sm font-bold border-2 text-blue-800 border-blue-500 bg-white rounded-lg">
+                                <span className="w-full inline-flex leading-4 align-middle">
+                                    <svg className="fill-current w-4 mr-2 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z" />
+                                    </svg>
+                                    Statistiche
+                                </span>
+                            </button>
+                            <button className="p-1 px-4 m-0.5 hover:text-blue-800 hover:border-blue-500 text-sm font-bold border-2 text-gray-600 border-gray-300 bg-white rounded-lg">
+                                <span className="w-full flex align-middle">Circolare</span>
+                            </button>
+                            <button className="p-1 px-4 m-0.5 hover:text-blue-800 hover:border-blue-500 text-sm font-bold border-2 text-gray-600 border-gray-300 bg-white rounded-lg">
+                                <span className="w-full flex align-middle">Circolare</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div className="bg-white shadow-md block">
+                        <div className="w-full p-2 flex hover:bg-blue-500 hover:text-white cursor-pointer relative">
+                            <p className="font-bold leading-5 w-11/12 text-md">Filtra per:</p>
+                            <svg className="fill-current w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path fill-rule="evenodd" d="M 11 2 L 11 11 L 2 11 L 2 13 L 11 13 L 11 22 L 13 22 L 13 13 L 22 13 L 22 11 L 13 11 L 13 2 Z" />
+                            </svg>
+                        </div>
+                        <div className="p-2 w-full relative inline-block">
+                            <button className="p-1 px-4 m-0.5 hover:text-blue-800 hover:border-blue-500 text-sm font-bold border-2 text-gray-600 border-gray-300 bg-white rounded-lg">
+                                <span className="w-full flex align-middle">Circolare</span>
+                            </button>
+                            <button className="p-1 px-2 m-0.5 text-sm font-bold border-2 text-blue-800 border-blue-500 bg-white rounded-lg">
+                                <span className="w-full inline-flex leading-4 align-middle">
+                                    <svg className="fill-current w-4 mr-2 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z" />
+                                    </svg>
+                                    Statistiche
+                                </span>
+                            </button>
+                            <button className="p-1 px-4 m-0.5 hover:text-blue-800 hover:border-blue-500 text-sm font-bold border-2 text-gray-600 border-gray-300 bg-white rounded-lg">
+                                <span className="w-full flex align-middle">Circolare</span>
+                            </button>
+                            <button className="p-1 px-4 m-0.5 hover:text-blue-800 hover:border-blue-500 text-sm font-bold border-2 text-gray-600 border-gray-300 bg-white rounded-lg">
+                                <span className="w-full flex align-middle">Circolare</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div className="bg-white shadow-md block">
+                        <div className="w-full p-2 flex hover:bg-blue-500 hover:text-white cursor-pointer relative">
+                            <p className="font-bold leading-5 w-11/12 text-md">Filtra per:</p>
+                            <svg className="fill-current w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path fill-rule="evenodd" d="M 11 2 L 11 11 L 2 11 L 2 13 L 11 13 L 11 22 L 13 22 L 13 13 L 22 13 L 22 11 L 13 11 L 13 2 Z" />
+                            </svg>
+                        </div>
+                        <div className="p-2 w-full relative inline-block">
+                            <button className="p-1 px-4 m-0.5 hover:text-blue-800 hover:border-blue-500 text-sm font-bold border-2 text-gray-600 border-gray-300 bg-white rounded-lg">
+                                <span className="w-full flex align-middle">Circolare</span>
+                            </button>
+                            <button className="p-1 px-2 m-0.5 text-sm font-bold border-2 text-blue-800 border-blue-500 bg-white rounded-lg">
+                                <span className="w-full inline-flex leading-4 align-middle">
+                                    <svg className="fill-current w-4 mr-2 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z" />
+                                    </svg>
+                                    Statistiche
+                                </span>
+                            </button>
+                            <button className="p-1 px-4 m-0.5 hover:text-blue-800 hover:border-blue-500 text-sm font-bold border-2 text-gray-600 border-gray-300 bg-white rounded-lg">
+                                <span className="w-full flex align-middle">Circolare</span>
+                            </button>
+                            <button className="p-1 px-4 m-0.5 hover:text-blue-800 hover:border-blue-500 text-sm font-bold border-2 text-gray-600 border-gray-300 bg-white rounded-lg">
+                                <span className="w-full flex align-middle">Circolare</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
             <div className="w-full h-full px-10" id="chec-div">
 
                 <div className="flex flex-col lg:flex-row" id="cart">
-                    <div className="lg:w-[70%] w-full lg:px-8 lg:py-14 md:px-6 px-4 md:py-8 py-4 bg-white" id="scroll">
+                    <div className="lg:w-[60%] w-full lg:px-8 lg:py-14 md:px-6 px-4 md:py-8 py-4 bg-white" id="scroll">
                         <div className="flex items-center cursor-pointer" >
                             <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-chevron-left" width="16" height="16" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -97,7 +198,7 @@ export default function Book() {
 
                                     </div>
 
-                                    <div className="mt-3 bg-gray-100 p-20">
+                                    <div className="mt-3 bg-gray-100 p-10">
                                         <div className="inline-flex text-lg border rounded-md shadow-lg p-2">
                                             <select value={startHour} onChange={(e) => setStartHour(e.target.value)} name="startHour" id="" className="px-2 outline-none appearance-none bg-transparent">
                                                 {
@@ -128,10 +229,11 @@ export default function Book() {
                                 </div>
                             </div>
                         </div>
-                        <InsuranceOptions cancellationPolicy={cancellationPolicy} insurancePolicy={insurancePolicy}/>
+                        <InsuranceOptions cancellationPolicy={cancellationPolicy} insurancePolicy={insurancePolicy} />
+                        <h3 className='text-xl font-bold'>Product details</h3>
                         <div className="md:flex items-stretch py-8 md:py-10 lg:py-8 border-t border-gray-50 shadow-md p-3">
                             <div className="md:w-4/12 lg:w-1/2 w-full">
-                                <img src={images[0]} alt="Black Leather Bag" className="h-full object-center object-cover hidden md:block" />
+                                <img src={images[0]} width={100} height={50} alt="Black Leather Bag" className="h-full object-center object-cover hidden md:block" />
                                 <img src="https://i.ibb.co/g9xsdCM/Rectangle-37.png" alt="Black Leather Bag" className="md:hidden w-full h-full object-center object-cover" />
                             </div>
                             <div className="md:pl-3 md:w-8/12 lg:w-3/4 flex flex-col justify-center">
@@ -148,7 +250,7 @@ export default function Book() {
                                     <div className="flex items-center justify-between pt-5">
                                         <div className="flex items-center">
                                             <p className="text-xs leading-3 underline text-black cursor-pointer">Add to favorites</p>
-                                            <p className="text-xs leading-3 underline text-red-500 pl-5 cursor-pointer">Remove</p>
+                                            {/* <p className="text-xs leading-3 underline text-red-500 pl-5 cursor-pointer">Remove</p> */}
                                         </div>
                                     </div>
                                 </div>
@@ -157,72 +259,160 @@ export default function Book() {
 
                         </div>
 
-                        {/* Repeat for other items as needed */}
                     </div>
 
-                    <div className="lg:w-[32%] w-full bg-gray-100 z-0 ">
+                    <div className="lg:w-[40%] w-full bg-gray-100 z-0 ">
                         <div className="flex flex-col lg:px-8 md:px-7 px-4 justify-between">
-                            <form onSubmit={handleSubmit(onSubmit)}>
+                            <div className="max-w-2xl mx-auto p-8 bg-white shadow-lg rounded-lg">
+                                <h2 className="text-3xl font-bold mb-6 text-center">Car Booking Form</h2>
+
+                                {/* Price and Selected Date Section */}
+                                <div className="flex items-center justify-between lg:pt-5 pt-20 pb-6">
+                                    <p className="text-2xl font-bold">Price:</p>
+                                    <p className="text-2xl font-bold text-right">${pricePerHour}/h</p>
+                                </div>
                                 <div>
-                                    <p className="lg:text-4xl text-3xl font-black leading-9 text-black">
-                                        <div className="flex items-center pb-6 justify-between lg:pt-5 pt-20">
-                                            <p className="text-2xl leading-normal text-black">Price</p>
-                                            <p className="text-2xl font-bold leading-normal text-right text-black">${pricePerHour}/h</p>
-                                        </div>
-                                    </p>
-                                    <label htmlFor="slot" className='text-black font-bold'>Selected Date</label>
-                                    <select className="select select-bordered select-sm w-full my-5">
-                                        {/* <option disabled selected> Selected slot</option> */}
-                                        <option disabled selected>{fullDate}</option>
-                                        {/*  {
-                                            slots.map(s => <option key={s} disabled >{s}</option>)
-                                        } */}
+                                    <label htmlFor="slot" className="block text-black font-bold">Selected Date</label>
+                                    <select
+                                        className="select select-bordered select-sm w-full my-5"
+                                        disabled
+                                    >
+                                        <option>{fullDate}</option>
                                     </select>
-                                    {slot && <div className="flex justify-between px-2">
-                                        <p className='font-bold'>Total Time:</p>
-                                        <p>1 hours</p>
-                                    </div>}
-
-                                    <div className="group relative px-2 mt-6">
-                                        <label htmlFor="1" className="block w-full pb-1 text-sm font-medium text-gray-500 transition-all duration-200 ease-in-out group-focus-within:text-black">Username</label>
-                                        <input id="1" defaultValue={name} type="text" className="peer h-10 w-full rounded-md  px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-black"  {...register("name", {
-                                            required: "Username is required!",
-                                        })} />
-                                        <div className="text-red-500">
-                                            {errors.name && <p>{errors.name.message}</p>}
+                                    {slot && (
+                                        <div className="flex justify-between px-2">
+                                            <p className="font-bold">Total Time:</p>
+                                            <p>1 hour</p>
                                         </div>
-                                    </div>
-                                    <div className="group relative px-2 mt-3">
-                                        <label htmlFor="1" className="block w-full pb-1 text-sm font-medium text-gray-500 transition-all duration-200 ease-in-out group-focus-within:text-black">Email</label>
-                                        <input id="1" disabled defaultValue={email} type="text" className="peer h-10 w-full rounded-md  px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-black cursor-not-allowed" />
-                                    </div>
-                                    <div className="group relative px-2 mt-3">
-                                        <label htmlFor="1" className="block w-full pb-1 text-sm font-medium text-gray-500 transition-all duration-200 ease-in-out group-focus-within:text-black">Phone Number</label>
-                                        <input id="1" defaultValue={phone} type="text" className="peer h-10 w-full rounded-md  px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-black" {...register("phone", {
-                                            required: "phone is required!",
-                                            pattern: {
-                                                value: /(^(\+88|0088)?(01){1}[3456789]{1}(\d){8})$/,
-                                                message: "Invalid phone number!",
-                                            },
-                                        })} />
-                                        <div className="text-red-500">
-                                            {errors.phone && <p>{errors.phone.message}</p>}
-                                        </div>
-
-                                    </div>
-                                    <div className="group relative px-2 mt-3">
-                                        <label htmlFor="1" className="block w-full pb-1 text-sm font-medium text-gray-500 transition-all duration-200 ease-in-out group-focus-within:text-black">Address</label>
-                                        <input id="1" defaultValue={address} type="text" className="peer h-10 w-full rounded-md  px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-black" {...register("address", {
-                                            required: "Address is required!",
-                                        })} />
-                                        <div className="text-red-500 mb-2">
-                                            {errors.address && <p>{errors.address.message}</p>}
-                                        </div>
-                                    </div>
-                                    <input type='submit' className="btn btn-wide w-full bg-black text-white hover:bg-gray-800" value={'Reserve'} />
+                                    )}
                                 </div>
 
-                            </form>
+                                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                                    {/* Personal Details */}
+
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {/* NID/Passport */}
+                                        <div>
+                                            <label className="block font-medium mb-2">NID/Passport</label>
+                                            <input
+                                                type="text"
+                                                {...register("nidPassport", { required: "NID/Passport is required!" })}
+                                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500"
+                                            />
+                                            {errors.nidPassport && <span className="text-red-500">{errors.nidPassport.message}</span>}
+                                        </div>
+
+                                        {/* Driving License */}
+                                        <div>
+                                            <label className="block font-medium mb-2">Driving License</label>
+                                            <input
+                                                type="text"
+                                                {...register("drivingLicense", { required: "Driving license is required!" })}
+                                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500"
+                                            />
+                                            {errors.drivingLicense && <span className="text-red-500">{errors.drivingLicense.message}</span>}
+                                        </div>
+                                    </div>
+
+                                    {/* Payment Information */}
+                                    <div>
+                                        <label className="block font-medium mb-2">Card Holder Name</label>
+                                        <input
+                                            type="text"
+                                            {...register("cardHolderName", { required: "Car holder name is required!" })}
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500"
+                                            placeholder="Card Number"
+                                        />
+                                        {errors.cardHolderName && <span className="text-red-500">{errors.cardHolderName.message}</span>}
+                                    </div>
+                                    <div>
+                                        <label className="block font-medium mb-2">Payment Information (Credit Card)</label>
+                                        <input
+                                            type="text"
+                                            {...register("cardNo", { required: "Card Number is required!" })}
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500"
+                                            placeholder="Card Number"
+                                        />
+                                        {errors.cardNo && <span className="text-red-500">{errors.cardNo.message}</span>}
+                                    </div>
+                                    {/* <div>
+                                        <label className="block font-medium mb-2">Payment Information (Credit Card)</label>
+                                        <input
+                                            type="text"
+                                            {...register("paymentInfo", { required: "Payment information is required!" })}
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500"
+                                            placeholder="Card Number"
+                                        />
+                                        {errors.paymentInfo && <span className="text-red-500">{errors.paymentInfo.message}</span>}
+                                    </div> */}
+
+                                    {/* Additional Options */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label className="block font-medium mb-2">GPS</label>
+                                            <select
+                                                {...register("gps")}
+                                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500"
+                                            >
+                                                <option value="yes">Yes</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label className="block font-medium mb-2">Child Seat</label>
+                                            <select
+                                                {...register("childSeat")}
+                                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500"
+                                            >
+                                                <option value="yes">Yes</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    {/* Phone and Address */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label className="block font-medium mb-2">Phone Number</label>
+                                            <input
+                                                type="text"
+                                                defaultValue={phone}
+                                                {...register("phone", {
+                                                    required: "Phone number is required!",
+                                                    pattern: {
+                                                        value: /(^(\+88|0088)?(01){1}[3456789]{1}(\d){8})$/,
+                                                        message: "Invalid phone number!",
+                                                    },
+                                                })}
+                                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500"
+                                            />
+                                            {errors.phone && <span className="text-red-500">{errors.phone.message}</span>}
+                                        </div>
+
+                                        <div>
+                                            <label className="block font-medium mb-2">Address</label>
+                                            <input
+                                                type="text"
+                                                defaultValue={address}
+                                                {...register("address", { required: "Address is required!" })}
+                                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500"
+                                            />
+                                            {errors.address && <span className="text-red-500">{errors.address.message}</span>}
+                                        </div>
+                                    </div>
+
+                                    {/* Submit Button */}
+                                    <div className="text-center">
+                                        <input
+                                            type="submit"
+                                            className="btn btn-wide w-full bg-black text-white hover:bg-gray-800"
+                                            value="Reserve"
+                                        />
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

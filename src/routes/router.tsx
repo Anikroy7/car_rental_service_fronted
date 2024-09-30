@@ -18,6 +18,11 @@ import { AllCarsPage } from "../pages/AllCarsPage";
 import Book from "../pages/Book";
 import BookingCalender from "../pages/BookingCalender";
 import AboutUs from "../pages/AboutUs";
+import NotFoundPage from "../pages/NotFound";
+import BookingConfirmation from "../pages/BookingConfirmation";
+import AllBookins from "../pages/dashboad/AllBookings";
+import MyBookings from "../pages/dashboad/Mybookings";
+import MyProfile from "../pages/dashboad/MyProfile";
 
 const router = createBrowserRouter([
   {
@@ -37,9 +42,10 @@ const router = createBrowserRouter([
     element: <AboutUs />,
   },
   {
-    path: "/calender",
-    element: <BookingCalender />,
+    path: '/book/confirm/:carId',
+    element: <BookingConfirmation />
   },
+
   {
     path: "/book/:id",
     element: <PrivateRoute><Book /></PrivateRoute>,
@@ -90,8 +96,34 @@ const router = createBrowserRouter([
         path: 'manage/cars/all',
         element: <AdminPrivateRoute> <AllCars /></AdminPrivateRoute>
       },
+      {
+        path: 'manage/bookings/all',
+        element: <AdminPrivateRoute> <AllBookins /></AdminPrivateRoute>
+      },
+
     ]
-  }
+  },
+  {
+    path: '/user/dashboard',
+    element: <PrivateRoute>
+      <Dashboard />
+    </PrivateRoute>,
+    children: [
+      {
+        path: 'manage/bookings/my-bookings',
+        element: <PrivateRoute> <MyBookings /></PrivateRoute>
+      },
+      {
+        path: 'manage/user/my-profile',
+        element: <PrivateRoute> <MyProfile /></PrivateRoute>
+      },
+    ]
+  },
+  {
+    path: "*",
+    element: <NotFoundPage />,
+  },
+
 ]);
 
 export default router;

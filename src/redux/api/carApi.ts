@@ -63,6 +63,18 @@ export const carApi = createApi({
       },
       invalidatesTags: ["cars"],
     }),
+
+    returnCar: builder.mutation({
+      query: (data) => {
+        return {
+          url: `/cars/return`,
+          method: "PUT",
+          body: data,
+
+        };
+      },
+      invalidatesTags: ["cars"],
+    }),
   }),
 });
 
@@ -72,5 +84,6 @@ export const {
   useDeleteCarMutation,
   useGetSingleCarQuery,
   useUpdateCarMutation,
-  useGetFpCarsQuery
+  useGetFpCarsQuery,
+  useReturnCarMutation
 } = carApi;

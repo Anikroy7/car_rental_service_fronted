@@ -3,13 +3,15 @@ import MainLayout from "../components/layouts/MainLayout";
 import { useGetSingleCarQuery } from "../redux/api/carApi";
 import Loading from "../components/ui/Loading";
 import { useEffect, useState } from "react";
+import ReactImageMagnify from 'react-image-magnify';
 
 
 export default function CarDetails() {
     const { id } = useParams()
     const { data, isLoading, isError } = useGetSingleCarQuery(id);
     const navigate = useNavigate();
-    const [index, setIndex] = useState(0)
+    const [index, setIndex] = useState(0);
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
     useEffect(() => {
         if (isError) {
             navigate('/')
@@ -26,7 +28,19 @@ export default function CarDetails() {
 
 
                         <div className="md:w-1/2">
-                            <img className="w-full h-96 object-cover" src={images[index]} alt="Tesla Model 3 Front" />
+                            <ReactImageMagnify {...{
+                                smallImage: {
+                                    alt: 'Wristwatch by Ted Baker London',
+                                    isFluidWidth: true,
+                                    src: images[index]
+                                },
+                                largeImage: {
+                                    src: images[index],
+                                    width: 700,
+                                    height: 1200
+                                }
+                            }} />
+                            {/* <img className="w-full h-96 object-cover" src={images[index]} alt="Tesla Model 3 Front" /> */}
                         </div>
 
 
@@ -72,9 +86,11 @@ export default function CarDetails() {
                         </div>
 
                     </div>
-                    <div className="p-10 text-center">
-                        <Link to={`/book/${id}`} className="btn bg-stone-700 text-white  btn-wide hover:bg-stone-900">Book Now</Link>
-                    </div>
+                    {
+                        userInfo.role === 'user' && <div className="p-10 text-center">
+                            <Link to={`/book/${id}`} className="btn bg-stone-700 text-white  btn-wide hover:bg-stone-900">Book Now</Link>
+                        </div>
+                    }
                 </div>
             </div>
 

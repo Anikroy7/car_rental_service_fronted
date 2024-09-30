@@ -1,27 +1,32 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../redux/hook";
 import { useEffect, useState } from "react";
-import { setUser } from "../../redux/features/auth/authSlice";
+import { logout, setUser } from "../../redux/features/auth/authSlice";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { Toaster } from "react-hot-toast";
 
 export default function Dashboard() {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpenMU, setIsOpenMU] = useState(true);
+    const [isOpenMB, setIsOpenMB] = useState(true);
 
-    const dispatch = useAppDispatch()
+    const dispatch = useAppDispatch();
+    const navigate= useNavigate()
     //login condition
     const userInfo = JSON.parse(localStorage.getItem('userInfo'))
     useEffect(() => {
         if (userInfo?.email) {
-            // console.log
-            ('from main layout, ', userInfo)
             dispatch(setUser({ ...userInfo }));
         }
     }, [userInfo])
     const location = useLocation();
     const paths = location.pathname.split("/");
     // console.log(paths)
+    const handleLogout = () => {
+      dispatch(logout({}));
+      localStorage.removeItem('userInfo');
+      navigate('/login')
 
+    }
     return (
         <>
             <section className="">
@@ -40,36 +45,67 @@ export default function Dashboard() {
                                 {/* Sidebar content */}
                                 <div className="font-bold text-2xl text-center my-2"><Link to={'/'}>EasyRide</Link></div>
                                 <li><Link to="/admin/dashboard" className={`btn btn-wide justify-start mt-6 hover:bg-gray-900 hover:text-white ${paths.length < 4 && 'bg-black text-white'}`}>Dashboad</Link></li>
-                                <li><Link to="/admin/dashboard/manage/users" className={`btn btn-wide justify-start mt-2 hover:bg-gray-900 hover:text-white ${paths.includes('users') && 'bg-black text-white'}`}>Manage Users</Link></li>
-                                <li>{/* <a href="#" className={`btn btn-wide justify-start mt-2 hover:bg-gray-900 hover:text-white `}>
+                                {
+                                    userInfo?.role === 'admin' && <>
+
+                                        <li><Link to="/admin/dashboard/manage/users" className={`btn btn-wide justify-start mt-2 hover:bg-gray-900 hover:text-white ${paths.includes('users') && 'bg-black text-white'}`}>Manage Users</Link></li>
+                                        <li>{/* <a href="#" className={`btn btn-wide justify-start mt-2 hover:bg-gray-900 hover:text-white `}>
                                     </a> */}</li>
-                                <li>
-                                    <details open={isOpen} onClick={() => setIsOpen(!isOpen)}>
-                                        <summary className={` btn btn-wide justify-start mt-2 text-black flex items-center justify-between`}>
+                                        <li>
+                                            <details open={isOpenMU} onClick={() => setIsOpenMU(!isOpenMU)}>
+                                                <summary className={` btn btn-wide justify-start mt-2 text-black flex items-center justify-between`}>
 
-                                            <span>Manage Cars</span>                                            <span className="ml-2">
-                                                {isOpen ? <FaChevronUp /> : <FaChevronDown />}
-                                            </span>
-                                        </summary>
-                                        <ul className="ml-7">
-                                            <li>
-                                                <Link to="/admin/dashboard/manage/cars/add"
-                                                    className={`btn btn-sm w-full justify-start mt-2 hover:bg-gray-900 hover:text-white ${paths.includes('userds') && 'bg-black text-white'}`}>
-                                                    Add Car
-                                                </Link>
-                                            </li>
+                                                    <span>Manage Cars</span>                                            <span className="ml-2">
+                                                        {isOpenMU ? <FaChevronUp /> : <FaChevronDown />}
+                                                    </span>
+                                                </summary>
+                                                <ul className="ml-7">
+                                                    <li>
+                                                        <Link to="/admin/dashboard/manage/cars/add"
+                                                            className={`btn btn-sm w-full justify-start mt-2 hover:bg-gray-900 hover:text-white ${paths.includes('userds') && 'bg-black text-white'}`}>
+                                                            Add Car
+                                                        </Link>
+                                                    </li>
 
-                                            <li>
-                                                <Link to="/admin/dashboard/manage/cars/all"
-                                                    className={`btn btn-sm w-full justify-start mt-2 hover:bg-gray-900 hover:text-white ${paths.includes('usefrs') && 'bg-black text-white'}`}>
-                                                    All Cars
-                                                </Link>
-                                            </li>
-                                        </ul>
-                                    </details>
-                                </li>
-                                <li><a href="#" className={`btn btn-wide justify-start mt-2 hover:bg-gray-900 hover:text-white `}>Manage Return Cars</a></li>
-                                <li><a href="#" className={`btn btn-wide justify-start my-2 hover:bg-gray-900 hover:text-white `}>Manage Bookings</a></li>
+                                                    <li>
+                                                        <Link to="/admin/dashboard/manage/cars/all"
+                                                            className={`btn btn-sm w-full justify-start mt-2 hover:bg-gray-900 hover:text-white ${paths.includes('usefrs') && 'bg-black text-white'}`}>
+                                                            All Cars
+                                                        </Link>
+                                                    </li>
+                                                </ul>
+                                            </details>
+                                        </li>
+                                        <li>
+                                            <details open={isOpenMB} onClick={() => setIsOpenMB(!isOpenMB)}>
+                                                <summary className={` btn btn-wide justify-start mt-2 text-black flex items-center justify-between`}>
+
+                                                    <span>Manage Bookings</span>
+                                                    <span className="ml-2">
+                                                        {isOpenMB ? <FaChevronUp /> : <FaChevronDown />}
+                                                    </span>
+                                                </summary>
+                                                <ul className="ml-7">
+                                                    <li>
+                                                        <Link to="/admin/dashboard/manage/bookings/all"
+                                                            className={`btn btn-sm w-full justify-start mt-2 hover:bg-gray-900 hover:text-white ${paths.includes('userds') && 'bg-black text-white'}`}>
+                                                            All Bookings
+                                                        </Link>
+                                                    </li>
+
+                                                    <li>
+                                                        <Link to="/admin/dashboard/manage/cars/all"
+                                                            className={`btn btn-sm w-full justify-start mt-2 hover:bg-gray-900 hover:text-white ${paths.includes('usefrs') && 'bg-black text-white'}`}>
+                                                            All Cars
+                                                        </Link>
+                                                    </li>
+                                                </ul>
+                                            </details>
+                                        </li></>
+                                }
+                                {
+                                    userInfo?.role==='user' && <li><Link to={`/user/dashboard/manage/bookings/my-bookings`} className={`btn btn-wide justify-start mt-2 hover:bg-gray-900 hover:text-white `}>My Bookings</Link></li>
+                                }
                             </ul>
                         </div>
                     </div>
@@ -93,13 +129,12 @@ export default function Dashboard() {
                                             tabIndex={0}
                                             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
                                             <li>
-                                                <a className="justify-between">
+                                                <Link to={'/user/dashboard/manage/user/my-profile'} className="justify-between">
                                                     Profile
                                                     <span className="badge">New</span>
-                                                </a>
+                                                </Link>
                                             </li>
-                                            <li><a>Settings</a></li>
-                                            <li><a>Logout</a></li>
+                                            <li><button onClick={handleLogout}>Logout</button></li>
                                         </ul>
                                     </div>
                                 </div>
