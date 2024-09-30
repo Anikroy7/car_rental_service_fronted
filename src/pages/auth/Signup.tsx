@@ -21,7 +21,7 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(true);
   const [showConfirmPassword, setshowConfirmPassword] = useState(true);
   const navigate = useNavigate();
-  const [createUser, { isLoading, error, isError, isSuccess }] =
+  const [createUser, { isLoading, error, isError, isSuccess, data }] =
     useCreateUserMutation();
   const {
     register,
@@ -44,9 +44,9 @@ export default function Signup() {
       console.log(error);
       error.data.errorSources.map((e) => toast.error(e.message));
     }
-      if (isSuccess) {
-        navigate("/login");
-      }
+    if (isSuccess && data) {
+      navigate("/login");
+    }
   }, [isError, isSuccess]);
 
   const onSubmit = (data: FormInputs) => {
@@ -228,11 +228,10 @@ export default function Signup() {
 
           <input
             disabled={!clicked}
-            className={`${
-              !clicked
+            className={`${!clicked
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-[#080c15] cursor-pointer hover:bg-[#20283b]"
-            } border-none text-white`}
+              } border-none text-white`}
             type="submit"
             value={`${isLoading ? "Loading..." : "Submit"}`}
           />

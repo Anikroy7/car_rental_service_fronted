@@ -1,21 +1,15 @@
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import MainLayout from '../components/layouts/MainLayout'
 import { useForm } from 'react-hook-form';
-import { useGetSlots } from '../hooks/useGetSlots';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/hook';
-import { useGetAllUsersQuery, useGetAUserQuery } from '../redux/api/userApi';
-import { CgLayoutGrid } from 'react-icons/cg';
 import Loading from '../components/ui/Loading';
-import toast from 'react-hot-toast';
-import BookingCalender from './BookingCalender';
 import BookingCalendar from './BookingCalender';
 import { useGetSingleCarQuery } from '../redux/api/carApi';
-import { getHours } from 'date-fns';
 import InsuranceOptions from './InsuranceOptions';
-import { useCreateBookingMutation } from '../redux/api/bookingApi';
 import { setBooking } from '../redux/features/booking/bookingSlice';
+import { useGetAUserQuery } from '../redux/api/userApi';
 
 
 type FormInputs = {
@@ -27,7 +21,6 @@ type FormInputs = {
 };
 
 export default function Book() {
-    const { slot, setSlot, timesSlots } = useGetSlots();
     const { id } = useParams();
     const { email, userId } = useAppSelector(state => state.auth);
     const { data: user, isLoading, isError, error } = useGetAUserQuery(undefined);
@@ -218,14 +211,7 @@ export default function Book() {
                                             </select>
                                         </div>
                                     </div>
-                                    {/* <div className="flex flex-wrap gap-2 pt-3 w-full justify-start">
-
-                                        {
-                                            timesSlots.map(s => (
-                                                <kbd onClick={() => setSlot(s)} key={s} className={`kbd kbd-md w-24 border-none text-cyan-100 bg-green-500 text-center ${slot === s && 'bg-stone-800'} hover:cursor-pointer `}>{s}</kbd>
-                                            ))
-                                        }
-                                    </div> */}
+                                    
                                 </div>
                             </div>
                         </div>

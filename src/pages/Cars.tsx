@@ -62,7 +62,7 @@ export default function Cars() {
                                 {/* Add to Cart Button */}
                                 <div className=' gap-2'>
                                     {
-                                        userInfo.role==='user'&&<Link to={`/book/${_id}`} className="mt-4 bg-black text-white font-bold py-1 px-4 rounded hover:bg-gray-700 transition duration-300 flex items-center justify-center">
+                                        userInfo?.role==='user'&&<Link to={`/book/${_id}`} className="mt-4 bg-black text-white font-bold py-1 px-4 rounded hover:bg-gray-700 transition duration-300 flex items-center justify-center">
                                         <FaBook className="mr-2" />
                                         Book Now
                                     </Link>

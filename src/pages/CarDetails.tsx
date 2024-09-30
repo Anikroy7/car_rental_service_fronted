@@ -77,7 +77,7 @@ export default function CarDetails() {
                         <h3 className="text-xl font-semibold text-gray-800 mb-4">More Images</h3>
                         <div className="flex flex-wrap gap-3">
                             {
-                                images.map((image, i) => <div onClick={() => setIndex(i)} key={image} className="w-24 cursor-pointer transition duration-500 hover:border-4 hover:border-blue-500 hover:shadow-lg">
+                                images?.map((image, i) => <div onClick={() => setIndex(i)} key={image} className="w-24 cursor-pointer transition duration-500 hover:border-4 hover:border-blue-500 hover:shadow-lg">
                                     <img className="w-full h-full object-cover" src={image} alt="Tesla Model 3 Rear" />
                                 </div>
                                 )
@@ -87,7 +87,7 @@ export default function CarDetails() {
 
                     </div>
                     {
-                        userInfo.role === 'user' && <div className="p-10 text-center">
+                        userInfo?.role === 'user' && <div className="p-10 text-center">
                             <Link to={`/book/${id}`} className="btn bg-stone-700 text-white  btn-wide hover:bg-stone-900">Book Now</Link>
                         </div>
                     }
