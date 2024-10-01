@@ -6,7 +6,11 @@ https://car-rental-frontend-eta.vercel.app
 
 ## Admin Crediantials
 email: admin@gmail.com
-password: 12345678
+password: 123456
+
+## user Crediantials
+email: anik@gmail.com
+password: 123456
 
 ## Introduction
 
