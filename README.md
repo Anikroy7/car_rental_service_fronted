@@ -4,6 +4,10 @@
 
 https://car-rental-frontend-eta.vercel.app
 
+## Admin Crediantials
+email: admin@gmail.com
+password: 12345678
+
 ## Introduction
 
 Car Rental Service is your one-stop online store for all booking essentials and accessories. Whether you're planning a weekend getaway or an extended adventure, we offer a curated selection of products to enhance your outdoor experience.
